@@ -1,35 +1,7 @@
-org.apache.http.conn.HttpHostConnectException: Connect to bdc9rcdcapiap01.prod.local:9444 [bdc9rcdcapiap01.prod.local/100.72.34.19] failed: Connection timed out: connect
-	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:156)
-	at org.apache.jmeter.protocol.http.sampler.HTTPHC4Impl$JMeterDefaultHttpClientConnectionOperator.connect(HTTPHC4Impl.java:409)
-	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
-	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+>curl http://127.0.0.5:21952/oauth2/token
+curl: (1) Received HTTP/0.9 when not allowed
+
+>curl https://127.0.0.5:21952/oauth2/token
+curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_INVALID_TOKEN (0x80090308) - The token supplied to the function is invalid
 
 
-Thread Name:setUp Thread Group 1-1
-Sample Start:2026-05-04 16:35:30 EDT
-Load time:21317
-Connect Time:21311
-Latency:0
-Size in bytes:2890
-Sent bytes:0
-Headers size in bytes:0
-Body size in bytes:2890
-Sample Count:1
-Error Count:1
-Data type ("text"|"bin"|""):text
-Response code:Non HTTP response code: org.apache.http.conn.HttpHostConnectException
-Response message:Non HTTP response message: Connect to bdc9rcdcapiap01.prod.local:9444 [bdc9rcdcapiap01.prod.local/100.72.34.19] failed: Connection timed out: connect
-
-GET https://api-gw-prf.prod.local/mock-apis/v1/HappyDayScanrio_100msResponse
-GET data:
-[no cookies]
-
-
-java.net.SocketException: Socket operation on nonsocket: connect
-	at java.net.DualStackPlainSocketImpl.connect0(Native Method)
-	at java.net.DualStackPlainSocketImpl.socketConnect(Unknown Source)
-	at java.net.AbstractPlainSocketImpl.doConnect(Unknown Source)
-	at java.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source)
-	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
-	at java.net.PlainSocketImpl.connect(Unknown Source)
-	at java.net.SocksSocketImpl.connect(Unknown Source)
