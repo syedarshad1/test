@@ -16,9 +16,12 @@ JOIN
     COCT42_USER.UM_TENANT tnt ON tok.TENANT_ID = tnt.UM_ID
 WHERE 
     tok.TOKEN_STATE = 'ACTIVE' 
-    -- FIX: Convert current date to milliseconds (Number) to match tok columns
-    AND (tok.TIME_CREATED + tok.VALIDITY_PERIOD) > (
-        (CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - TO_DATE('01-01-1970', 'DD-MM-YYYY')) * 86400000
+    -- We convert the logic to: Token Lifetime > Current Age of Token
+    -- This avoids comparing against a massive Epoch number directly
+    AND tok.VALIDITY_PERIOD > (
+        ROUND(
+            (CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - CAST(TO_DATE('01-01-1970', 'DD-MM-YYYY') AS DATE)) * 86400000
+        ) - tok.TIME_CREATED
     )
 GROUP BY 
     tnt.UM_DOMAIN_NAME, 
