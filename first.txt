@@ -1,32 +1,50 @@
-bdc9rcdcapiap01-sdm-cc_apigwprd
-127.0.0.5:21952
+bdc1rcdcapiap01-sdm-cc_apigwprd
+127.0.0.5:21548
 
-bdc9rcdcapiap02-sdm-cc_apigwprd
-127.0.0.5:21956
+bdc1rcdcapiap02-sdm-cc_apigwprd
+127.0.0.5:21854
 
-bdc9rcdcapiap03-sdm-cc_apigwprd
-127.0.0.5:21960
+bdc1rcdcapiap03-sdm-cc_apigwprd
+127.0.0.5:21608
 
-bdc9rcdcapiap04-sdm-cc_apigwprd
-127.0.0.5:21964
+bdc1rcdcapiap04-sdm-cc_apigwprd
+127.0.0.5:21554
 
-bdc9rcdcapiap05-sdm-cc_apigwprd
-127.0.0.5:21968
+bdc1rcdcapiap05-sdm-cc_apigwprd
+127.0.0.5:21557
 
-bdc9rcdcapiap06-sdm-cc_apigwprd
-127.0.0.5:21972
+bdc1rcdcapiap06-sdm-cc_apigwprd
+127.0.0.5:21551
 
-bdc9rcdcapiap07-sdm-cc_apigwprd
-127.0.0.5:21976
+bdc1rcdcapiap07-sdm-cc_apigwprd
+127.0.0.5:21602
 
-bdc9rcdcapiap08-sdm-cc_apigwprd
-127.0.0.5:21980
+bdc1rcdcapiap08-sdm-cc_apigwprd
+127.0.0.5:21605
 
-bdc9rcdcapiap09-sdm-cc_apigwprd
-127.0.0.5:21984
+bdc1rcdcapiap09-sdm-cc_apigwprd
+127.0.0.5:21857
 
-bdc9rcdcapiap10-sdm-cc_apigwprd
-127.0.0.5:21988
+bdc1rcdcapiap10-sdm-cc_apigwprd
+127.0.0.5:21571
 
-bdc9rcdcapiap11-sdm-cc_apigwprd
-127.0.0.5:21992
+bdc1rcdcapiap11-sdm-cc_apigwprd
+127.0.0.5:21860
+
+bdc1rcdcapiap12-sdm-cc_apigwprd
+127.0.0.5:11644
+
+bdc1rcdcapiap13-sdm-cc_apigwprd
+127.0.0.5:11542
+
+bdc1rcdcapiap14-sdm-cc_apigwprd
+127.0.0.5:21663
+
+bdc1rcdcapiap15-sdm-cc_apigwprd
+127.0.0.5:21667
+
+bdc1repoapiap8-sdm-cc_apigwprd
+127.0.0.5:21544
+
+bdc1repoapiap9-sdm-cc_apigwprd
+127.0.0.5:21460
