@@ -1,4 +1,36 @@
-SELECT DATA_TYPE 
-FROM all_tab_columns 
-WHERE table_name = 'IDN_OAUTH2_ACCESS_TOKEN' 
-AND column_name IN ('TIME_CREATED', 'VALIDITY_PERIOD');
+WITH ActiveTokenCounts AS (
+    SELECT 
+        tok.TENANT_ID, 
+        tok.CONSUMER_KEY_ID, 
+        COUNT(tok.ACCESS_TOKEN) AS TOKEN_COUNT
+    FROM 
+        COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
+    WHERE 
+        tok.TOKEN_STATE = 'ACTIVE'
+        -- Logic: Add VALIDITY_PERIOD (seconds) to TIME_CREATED (timestamp) 
+        -- and check if that point in time is still in the future.
+        -- Note: VALIDITY_PERIOD is usually in seconds or ms. 
+        -- If seconds: / 86400. If milliseconds: / 86400000.
+        AND (tok.TIME_CREATED + NUMTODSINTERVAL(tok.VALIDITY_PERIOD/1000, 'SECOND')) > SYSTIMESTAMP
+    GROUP BY 
+        tok.TENANT_ID, 
+        tok.CONSUMER_KEY_ID
+)
+SELECT 
+    tnt.UM_DOMAIN_NAME AS BANK,
+    app.ORGANIZATION,
+    app.NAME AS APPLICATION_NAME,
+    apps.CONSUMER_KEY,
+    res.TOKEN_COUNT
+FROM 
+    ActiveTokenCounts res
+JOIN 
+    COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON res.CONSUMER_KEY_ID = apps.ID
+JOIN 
+    COCT42_AM.AM_APPLICATION_KEY_MAPPING map ON apps.CONSUMER_KEY = map.CONSUMER_KEY
+JOIN 
+    COCT42_AM.AM_APPLICATION app ON map.APPLICATION_ID = app.APPLICATION_ID
+JOIN 
+    COCT42_USER.UM_TENANT tnt ON res.TENANT_ID = tnt.UM_ID
+ORDER BY 
+    res.TOKEN_COUNT DESC;
