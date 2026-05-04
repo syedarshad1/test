@@ -1,1 +1,4 @@
-carbon.super	carbon.super	IBS_PeoplesBank_Prod_112_Salesforce	11245	292435	0	0	0	0	0	0
+SELECT MAX(TIME_CREATED) 
+FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
+JOIN COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON tok.CONSUMER_KEY_ID = apps.ID
+WHERE apps.CONSUMER_KEY = '11245'; -- Using the key from your result
