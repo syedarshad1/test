@@ -1,20 +1,23 @@
 SELECT 
-    tok.ACCESS_TOKEN,
-    tok.TOKEN_STATE,
-    tok.TIME_CREATED,
-    -- Calculated Expiry Field
-    (tok.TIME_CREATED + (tok.VALIDITY_PERIOD / 86400000)) AS CALCULATED_EXPIRY,
-    -- Is it expired according to the clock?
+    apps.CONSUMER_KEY,
+    -- Group into Active vs Other
     CASE 
-        WHEN (tok.TIME_CREATED + (tok.VALIDITY_PERIOD / 86400000)) < SYSDATE THEN 'YES'
-        ELSE 'NO'
-    END AS IS_PAST_EXPIRY
+        WHEN tok.TOKEN_STATE = 'ACTIVE' THEN 'ACTIVE'
+        ELSE 'NON-ACTIVE (Expired/Revoked/Inactive)' 
+    END AS CATEGORY,
+    COUNT(*) AS TOKEN_COUNT,
+    -- Earliest and Latest Expiry for the group
+    MIN(tok.TIME_CREATED + (tok.VALIDITY_PERIOD / 86400000)) AS RANGE_START_EXPIRY,
+    MAX(tok.TIME_CREATED + (tok.VALIDITY_PERIOD / 86400000)) AS RANGE_END_EXPIRY
 FROM 
     COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
 JOIN 
     COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON tok.CONSUMER_KEY_ID = apps.ID
 WHERE 
     apps.CONSUMER_KEY = '11245'
-ORDER BY 
-    tok.TIME_CREATED DESC
-FETCH FIRST 100 ROWS ONLY;
+GROUP BY 
+    apps.CONSUMER_KEY,
+    CASE 
+        WHEN tok.TOKEN_STATE = 'ACTIVE' THEN 'ACTIVE'
+        ELSE 'NON-ACTIVE (Expired/Revoked/Inactive)' 
+    END;
