@@ -7,8 +7,9 @@ WITH ActiveTokenCounts AS (
         COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
     WHERE 
         tok.TOKEN_STATE = 'ACTIVE'
-        -- Convert TIMESTAMP to DATE, then add the VALIDITY fraction
-        -- VALIDITY_PERIOD / 1000 (seconds) / 60 (min) / 60 (hour) / 24 (day)
+        -- Ignore 'Zero' or invalid years (the source of ORA-01841)
+        AND EXTRACT(YEAR FROM tok.TIME_CREATED) > 1970
+        -- Comparison logic using simple date math
         AND (CAST(tok.TIME_CREATED AS DATE) + (tok.VALIDITY_PERIOD / 86400000)) > SYSDATE
     GROUP BY 
         tok.TENANT_ID, 
