@@ -1,35 +1,42 @@
-WITH ActiveTokenCounts AS (
-    SELECT 
-        tok.TENANT_ID, 
-        tok.CONSUMER_KEY_ID, 
-        COUNT(tok.ACCESS_TOKEN) AS TOKEN_COUNT
-    FROM 
-        COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
-    WHERE 
-        tok.TOKEN_STATE = 'ACTIVE'
-        -- Ignore 'Zero' or invalid years (the source of ORA-01841)
-        AND EXTRACT(YEAR FROM tok.TIME_CREATED) > 1970
-        -- Comparison logic using simple date math
-        AND (CAST(tok.TIME_CREATED AS DATE) + (tok.VALIDITY_PERIOD / 86400000)) > SYSDATE
-    GROUP BY 
-        tok.TENANT_ID, 
-        tok.CONSUMER_KEY_ID
-)
+-- 1. Check for invalid or 'Zero' Timestamps
+SELECT COUNT(*) FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN 
+WHERE TIME_CREATED IS NULL OR EXTRACT(YEAR FROM TIME_CREATED) < 2000;
+
+-- 2. Check for non-numeric Validity Periods
+SELECT COUNT(*) FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN 
+WHERE VALIDITY_PERIOD IS NULL OR VALIDITY_PERIOD < 0;
+
+-- 3. Verify we can see the Consumer Key link
+SELECT CONSUMER_KEY_ID, COUNT(*) FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN 
+WHERE ROWNUM <= 10 GROUP BY CONSUMER_KEY_ID;
+
 SELECT 
     tnt.UM_DOMAIN_NAME AS BANK,
     app.ORGANIZATION,
     app.NAME AS APPLICATION_NAME,
-    apps.CONSUMER_KEY,
-    res.TOKEN_COUNT
+    map.CONSUMER_KEY,
+    COUNT(tok.ACCESS_TOKEN) AS ACTIVE_TOKEN_COUNT
 FROM 
-    ActiveTokenCounts res
+    COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
 JOIN 
-    COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON res.CONSUMER_KEY_ID = apps.ID
+    COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON tok.CONSUMER_KEY_ID = apps.ID
 JOIN 
     COCT42_AM.AM_APPLICATION_KEY_MAPPING map ON apps.CONSUMER_KEY = map.CONSUMER_KEY
 JOIN 
     COCT42_AM.AM_APPLICATION app ON map.APPLICATION_ID = app.APPLICATION_ID
 JOIN 
-    COCT42_USER.UM_TENANT tnt ON res.TENANT_ID = tnt.UM_ID
+    COCT42_USER.UM_TENANT tnt ON tok.TENANT_ID = tnt.UM_ID
+WHERE 
+    tok.TOKEN_STATE = 'ACTIVE'
+    -- We filter for rows where TIME_CREATED is a valid year first
+    AND tok.TIME_CREATED > TIMESTAMP '2000-01-01 00:00:00'
+    -- Direct logic: If (Now - Created) is less than the Validity, it's still active.
+    -- We use SYSTIMESTAMP - TIME_CREATED which returns an INTERVAL.
+    AND (SYSTIMESTAMP - tok.TIME_CREATED) < NUMTODSINTERVAL(tok.VALIDITY_PERIOD/1000, 'SECOND')
+GROUP BY 
+    tnt.UM_DOMAIN_NAME, 
+    app.ORGANIZATION, 
+    app.NAME, 
+    map.CONSUMER_KEY
 ORDER BY 
-    res.TOKEN_COUNT DESC;
+    ACTIVE_TOKEN_COUNT DESC;
