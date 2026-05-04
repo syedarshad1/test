@@ -1,16 +1,15 @@
-
-
-SELECT * FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN where tenant_id = '-1234' and authz_user = 'peoples_bank_prd'
-
-validity_period=3600000 its in milli seconds?
-refresh_token_validaty_period=14400000 its in milli seconds?
-
-difference between validity_period vs refresh_token_validaty_period
-
-token_state = ACTIVE
-TOKEN_STATE_ID = NONE
-
-difference between token_state vs TOKEN_STATE_ID
-
-
-We are pruging the token every 4 hours, not sure the condition and schema name.
+SELECT 
+    TO_CHAR(tok.TIME_CREATED, 'YYYY-MM-DD HH24') || ':00' AS HOURLY_WINDOW,
+    COUNT(*) AS NEW_TOKENS_GENERATED
+FROM 
+    COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
+JOIN 
+    COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON tok.CONSUMER_KEY_ID = apps.ID
+WHERE 
+    apps.CONSUMER_KEY = '11245'
+    -- Look back exactly 4 hours from right now
+    AND tok.TIME_CREATED >= SYSTIMESTAMP - INTERVAL '4' HOUR
+GROUP BY 
+    TO_CHAR(tok.TIME_CREATED, 'YYYY-MM-DD HH24')
+ORDER BY 
+    HOURLY_WINDOW DESC;
