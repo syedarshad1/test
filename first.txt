@@ -1,1 +1,63 @@
-first file
+bdc9rcdcapiap01-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21952
+
+
+
+bdc9rcdcapiap02-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21956
+
+
+
+bdc9rcdcapiap03-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21960
+
+
+
+bdc9rcdcapiap04-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21964
+
+
+
+bdc9rcdcapiap05-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21968
+
+
+
+bdc9rcdcapiap06-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21972
+
+
+
+bdc9rcdcapiap07-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21976
+
+
+
+bdc9rcdcapiap08-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21980
+
+
+
+bdc9rcdcapiap09-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21984
+
+
+
+bdc9rcdcapiap10-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21988
+
+
+
+bdc9rcdcapiap11-sdm-cc_apigwprd
+SSH (Certificate Based)
+127.0.0.5:21992
