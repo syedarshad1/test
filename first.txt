@@ -1,4 +1,16 @@
--- Check if the Audit table has records from yesterday
-SELECT COUNT(*) 
-FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN_AUDIT 
-WHERE TIME_CREATED >= TRUNC(SYSDATE) - 1;
+
+
+SELECT * FROM COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN where tenant_id = '-1234' and authz_user = 'peoples_bank_prd'
+
+validity_period=3600000 its in milli seconds?
+refresh_token_validaty_period=14400000 its in milli seconds?
+
+difference between validity_period vs refresh_token_validaty_period
+
+token_state = ACTIVE
+TOKEN_STATE_ID = NONE
+
+difference between token_state vs TOKEN_STATE_ID
+
+
+We are pruging the token every 4 hours, not sure the condition and schema name.
