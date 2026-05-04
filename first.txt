@@ -1,35 +1,4 @@
-WITH ActiveTokenCounts AS (
-    -- Group only by the Numeric IDs first to avoid datatype conflicts
-    SELECT 
-        tok.TENANT_ID, 
-        tok.CONSUMER_KEY_ID, 
-        COUNT(tok.ACCESS_TOKEN) AS TOKEN_COUNT
-    FROM 
-        COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
-    WHERE 
-        tok.TOKEN_STATE = 'ACTIVE'
-        -- Simple numeric check: current epoch in ms vs token expiry
-        AND (tok.TIME_CREATED + tok.VALIDITY_PERIOD) > 
-            ((CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - TO_DATE('01-01-1970', 'DD-MM-YYYY')) * 86400000)
-    GROUP BY 
-        tok.TENANT_ID, 
-        tok.CONSUMER_KEY_ID
-)
-SELECT 
-    tnt.UM_DOMAIN_NAME AS BANK,
-    app.ORGANIZATION,
-    app.NAME AS APPLICATION_NAME,
-    apps.CONSUMER_KEY,
-    res.TOKEN_COUNT
-FROM 
-    ActiveTokenCounts res
-JOIN 
-    COCT42_AM.IDN_OAUTH_CONSUMER_APPS apps ON res.CONSUMER_KEY_ID = apps.ID
-JOIN 
-    COCT42_AM.AM_APPLICATION_KEY_MAPPING map ON apps.CONSUMER_KEY = map.CONSUMER_KEY
-JOIN 
-    COCT42_AM.AM_APPLICATION app ON map.APPLICATION_ID = app.APPLICATION_ID
-JOIN 
-    COCT42_USER.UM_TENANT tnt ON res.TENANT_ID = tnt.UM_ID
-ORDER BY 
-    res.TOKEN_COUNT DESC;
+SELECT DATA_TYPE 
+FROM all_tab_columns 
+WHERE table_name = 'IDN_OAUTH2_ACCESS_TOKEN' 
+AND column_name IN ('TIME_CREATED', 'VALIDITY_PERIOD');
