@@ -7,11 +7,9 @@ WITH ActiveTokenCounts AS (
         COCT42_AM.IDN_OAUTH2_ACCESS_TOKEN tok
     WHERE 
         tok.TOKEN_STATE = 'ACTIVE'
-        -- Logic: Add VALIDITY_PERIOD (seconds) to TIME_CREATED (timestamp) 
-        -- and check if that point in time is still in the future.
-        -- Note: VALIDITY_PERIOD is usually in seconds or ms. 
-        -- If seconds: / 86400. If milliseconds: / 86400000.
-        AND (tok.TIME_CREATED + NUMTODSINTERVAL(tok.VALIDITY_PERIOD/1000, 'SECOND')) > SYSTIMESTAMP
+        -- Convert TIMESTAMP to DATE, then add the VALIDITY fraction
+        -- VALIDITY_PERIOD / 1000 (seconds) / 60 (min) / 60 (hour) / 24 (day)
+        AND (CAST(tok.TIME_CREATED AS DATE) + (tok.VALIDITY_PERIOD / 86400000)) > SYSDATE
     GROUP BY 
         tok.TENANT_ID, 
         tok.CONSUMER_KEY_ID
