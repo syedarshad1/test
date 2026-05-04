@@ -1,7 +1,7 @@
 SELECT 
     tnt.UM_DOMAIN_NAME AS BANK,
-    app.ORGANIZATION,
-    app.NAME AS APPLICATION_NAME,
+    TO_CHAR(app.ORGANIZATION) AS ORGANIZATION,
+    TO_CHAR(app.NAME) AS APPLICATION_NAME,
     map.CONSUMER_KEY,
     COUNT(tok.ACCESS_TOKEN) AS ACTIVE_TOKEN_COUNT
 FROM 
@@ -16,17 +16,13 @@ JOIN
     COCT42_USER.UM_TENANT tnt ON tok.TENANT_ID = tnt.UM_ID
 WHERE 
     tok.TOKEN_STATE = 'ACTIVE' 
-    -- We convert the logic to: Token Lifetime > Current Age of Token
-    -- This avoids comparing against a massive Epoch number directly
-    AND tok.VALIDITY_PERIOD > (
-        ROUND(
-            (CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - CAST(TO_DATE('01-01-1970', 'DD-MM-YYYY') AS DATE)) * 86400000
-        ) - tok.TIME_CREATED
-    )
+    -- Using a simplified numeric comparison for the date logic
+    AND (tok.TIME_CREATED + tok.VALIDITY_PERIOD) > 
+        ((CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - TO_DATE('01-01-1970', 'DD-MM-YYYY')) * 86400000)
 GROUP BY 
     tnt.UM_DOMAIN_NAME, 
-    app.ORGANIZATION, 
-    app.NAME, 
+    TO_CHAR(app.ORGANIZATION), 
+    TO_CHAR(app.NAME), 
     map.CONSUMER_KEY
 ORDER BY 
     ACTIVE_TOKEN_COUNT DESC;
