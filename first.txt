@@ -1,46 +1,195 @@
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="EC_V4_0_Production_Priming_CeB" enabled="true">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="Timer" elementType="Argument">
+            <stringProp name="Argument.name">Timer</stringProp>
+            <stringProp name="Argument.value">1000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="All_Banks_XP ORG_EC4.0" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="Threads initial delay">0</stringProp>
+        <stringProp name="Start users count">1</stringProp>
+        <stringProp name="Start users count burst">1</stringProp>
+        <stringProp name="Start users period">300</stringProp>
+        <stringProp name="Stop users count">1</stringProp>
+        <stringProp name="Stop users period">0</stringProp>
+        <stringProp name="flighttime">1000</stringProp>
+        <stringProp name="rampUp">0</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+      </kg.apc.jmeter.threads.SteppingThreadGroup>
+      <hashTree>
+        <!-- 1. CEBlogins -->
+        <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - CEBlogins" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:\US\EC\Jmeter\bin\CEBlogins.csv</stringProp>
+          <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\CEBlogins.csv</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
           <stringProp name="variableNames">BANK,CEBID</stringProp>
         </CSVDataSet>
-
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <hashTree/>
+        <!-- 2. Product_data_file-Bankway -->
+        <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Bankway" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:\US\EC\Jmeter\bin\Product_data_file-Bankway.csv</stringProp>
+          <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Product_data_file-Bankway.csv</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
           <stringProp name="variableNames">FEID,NAME,APP,APPL,ACCTYP,PGN</stringProp>
         </CSVDataSet>
-
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <hashTree/>
+        <!-- 3. Product_data_file -->
+        <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Product Data" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:\US\EC\Jmeter\bin\Product_data_file.csv</stringProp>
+          <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Product_data_file.csv</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
           <stringProp name="variableNames">FEID,NAME,APP,PGN</stringProp>
         </CSVDataSet>
-
-
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <hashTree/>
+        <!-- 4. Org_data_file -->
+        <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Org Data" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">C:\US\EC\Jmeter\bin\Org_data_file.csv</stringProp>
+          <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Org_data_file.csv</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
           <stringProp name="variableNames">FEID</stringProp>
         </CSVDataSet>
+        <hashTree/>
 
-current path is C:\apache-jmeter-5.6.3\bin\
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">text/xml; charset=utf-8</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="XPRetrieveFeOrgStructure" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <stringProp name="Argument.value">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:urn=&quot;urn:Fis:XPRetrieveFeOrgStructureRqst&quot; xmlns:urn1=&quot;urn:Fis:FisCommonRqstHdr&quot; xmlns:urn2=&quot;urn:Fis:Common&quot; xmlns:urn3=&quot;urn:Fis:XPOrganizationalUnit&quot;&gt;&#xd;
+   &lt;soapenv:Header/&gt;&#xd;
+   &lt;soapenv:Body&gt;&#xd;
+      &lt;urn:XPRtrvFeOrgStrcRqst&gt;&#xd;
+         &lt;urn1:RqstHdr&gt;&#xd;
+            &lt;urn1:RqstHdrVer&gt;2.1.0&lt;/urn1:RqstHdrVer&gt;&#xd;
+            &lt;urn1:MsgUuid&gt;${__UUID}&lt;/urn1:MsgUuid&gt;&#xd;
+            &lt;urn1:SrcId&gt;CeB&lt;/urn1:SrcId&gt;&#xd;
+            &lt;urn1:LclPref&gt;en-US&lt;/urn1:LclPref&gt;&#xd;
+            &lt;urn1:Sec&gt;&#xd;
+               &lt;urn1:UsernameToken&gt;EC_CUST_QA_USER&lt;/urn1:UsernameToken&gt;&#xd;
+            &lt;/urn1:Sec&gt;&#xd;
+            &lt;urn1:ServPrmtrsLst&gt;&#xd;
+               &lt;urn1:ServPrmtrs&gt;&#xd;
+                  &lt;urn1:FeId&gt;${FEID}&lt;/urn1:FeId&gt;&#xd;
+                  &lt;urn1:ServId&gt;XPRetrieveFeOrgStructure&lt;/urn1:ServId&gt;&#xd;
+                  &lt;urn1:ServVer&gt;2.0.0&lt;/urn1:ServVer&gt;&#xd;
+                  &lt;urn1:ApplId&gt;XP_ORG&lt;/urn1:ApplId&gt;&#xd;
+               &lt;/urn1:ServPrmtrs&gt;&#xd;
+            &lt;/urn1:ServPrmtrsLst&gt;&#xd;
+         &lt;/urn1:RqstHdr&gt;&#xd;
+         &lt;urn:XPRtrvFeOrgStrcOsi&gt;&#xd;
+            &lt;urn:FeRqstKey&gt;&#xd;
+               &lt;urn2:FeRqst&gt;&#xd;
+                  &lt;urn2:FeId&gt;${FEID}&lt;/urn2:FeId&gt;&#xd;
+               &lt;/urn2:FeRqst&gt;&#xd;
+            &lt;/urn:FeRqstKey&gt;&#xd;
+            &lt;urn:FeOrgStrcDtlFltr&gt;&#xd;
+               &lt;urn3:InclFe&gt;true&lt;/urn3:InclFe&gt;&#xd;
+               &lt;urn3:InclLce&gt;true&lt;/urn3:InclLce&gt;&#xd;
+               &lt;urn3:InclCrncy&gt;true&lt;/urn3:InclCrncy&gt;&#xd;
+               &lt;urn3:InclPoc&gt;false&lt;/urn3:InclPoc&gt;&#xd;
+            &lt;/urn:FeOrgStrcDtlFltr&gt;&#xd;
+         &lt;/urn:XPRtrvFeOrgStrcOsi&gt;&#xd;
+      &lt;/urn:XPRtrvFeOrgStrcRqst&gt;&#xd;
+   &lt;/soapenv:Body&gt;&#xd;
+&lt;/soapenv:Envelope&gt;</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">ih2-prd.prod.local</stringProp>
+          <stringProp name="HTTPSampler.protocol">HTTPS</stringProp>
+          <stringProp name="HTTPSampler.path">/wsv2hdr/rqst</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Sleep" enabled="true">
+            <stringProp name="ConstantTimer.delay">${Timer}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <!-- Standard Results Listener -->
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
