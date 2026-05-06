@@ -1,3 +1,7 @@
+getting below error, also correct the jmx file according, i was getting this error before, I have right jar
+
+"Cannot invoke "org.apache.jmeter.gui.JMeterGUIComponent.clearGui()" because "guicomp" is null"
+
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
