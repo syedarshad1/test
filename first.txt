@@ -1,1 +1,11 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><XPRtrvFeOrgStrcRsp xmlns="FISXPRtrvFeOrgStrcRsp" xmlns:ns1="urn:Fis:FisCommonRspHdr"><ns1:RspHdr><ns1:RspHdrVer>2.1.0</ns1:RspHdrVer><ns1:RtnCde>100</ns1:RtnCde><ns1:MsgUuid>e6e13812-0eeb-425a-964d-0b38c1d23bff</ns1:MsgUuid><ns1:Lcl>en-US</ns1:Lcl><ns1:MsgLst><ns1:Msg><ns1:MsgCde>100</ns1:MsgCde><ns1:Typ>System Error</ns1:Typ><ns1:Txt>Failed to process the messaging request.  Routing ID [${FEID}~XP_ORG~XPRetrieveFeOrgStructure~2.0.0] is invalid</ns1:Txt></ns1:Msg></ns1:MsgLst></ns1:RspHdr></XPRtrvFeOrgStrcRsp></soapenv:Body></soapenv:Envelope>
+7038	10G
+7042	10J
+7070	10X
+7080	11C
+7096	11K
+7100	11M
+7106	11P
+7120	11W
+7136	12E
+7178	12Z
+7188	18T
