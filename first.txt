@@ -1,7 +1,3 @@
-getting below error, also correct the jmx file according, i was getting this error before, I have right jar
-
-"Cannot invoke "org.apache.jmeter.gui.JMeterGUIComponent.clearGui()" because "guicomp" is null"
-
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
@@ -34,9 +30,9 @@ getting below error, also correct the jmx file according, i was getting this err
         </elementProp>
       </kg.apc.jmeter.threads.SteppingThreadGroup>
       <hashTree>
-        <!-- 1. CEBlogins -->
+        <!-- CSV 1: CEBlogins -->
         <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - CEBlogins" enabled="true">
-          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="delimiter">&#x9;</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\CEBlogins.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -47,9 +43,9 @@ getting below error, also correct the jmx file according, i was getting this err
           <stringProp name="variableNames">BANK,CEBID</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <!-- 2. Product_data_file-Bankway -->
+        <!-- CSV 2: Product_data_file-Bankway -->
         <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Bankway" enabled="true">
-          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="delimiter">&#x9;</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Product_data_file-Bankway.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -57,12 +53,12 @@ getting below error, also correct the jmx file according, i was getting this err
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
-          <stringProp name="variableNames">FEID,NAME,APP,APPL,ACCTYP,PGN</stringProp>
+          <stringProp name="variableNames">FEID_BW,NAME_BW,APP_BW,APPL_BW,ACCTYP_BW,PGN_BW</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <!-- 3. Product_data_file -->
+        <!-- CSV 3: Product_data_file -->
         <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Product Data" enabled="true">
-          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="delimiter">&#x9;</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Product_data_file.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -70,12 +66,12 @@ getting below error, also correct the jmx file according, i was getting this err
           <boolProp name="recycle">false</boolProp>
           <stringProp name="shareMode">shareMode.all</stringProp>
           <boolProp name="stopThread">true</boolProp>
-          <stringProp name="variableNames">FEID,NAME,APP,PGN</stringProp>
+          <stringProp name="variableNames">FEID_PROD,NAME_PROD,APP_PROD,PGN_PROD</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <!-- 4. Org_data_file -->
+        <!-- CSV 4: Org_data_file -->
         <CSVDataSet guiclass="TestBeanGui" testclass="CSVDataSet" testname="CSV - Org Data" enabled="true">
-          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="delimiter">&#x9;</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="filename">C:\apache-jmeter-5.6.3\bin\Org_data_file.csv</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -86,7 +82,6 @@ getting below error, also correct the jmx file according, i was getting this err
           <stringProp name="variableNames">FEID,SUFFIX</stringProp>
         </CSVDataSet>
         <hashTree/>
-
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -96,7 +91,6 @@ getting below error, also correct the jmx file according, i was getting this err
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="XPRetrieveFeOrgStructure" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -155,7 +149,6 @@ getting below error, also correct the jmx file according, i was getting this err
           </ConstantTimer>
           <hashTree/>
         </hashTree>
-        <!-- Standard Results Listener -->
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
