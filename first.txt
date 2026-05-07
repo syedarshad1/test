@@ -1,7 +1,3 @@
-ssh e3016834@127.0.0.6 -p 21952
+ssh -N -L 127.0.0.102:9444:localhost:9444 e3016834@127.0.0.6 -p 21952
 
-netstat -an | grep 9444
-
-netstat -an | grep 9443
-
-curl -vk --noproxy "*" https://localhost:9444/oauth2/token
+curl -vk --noproxy "*" https://127.0.0.102:9444/oauth2/token
