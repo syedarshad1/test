@@ -1,12 +1,7 @@
-keytool -importkeystore -srckeystore "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks" -destkeystore client.p12 -deststoretype PKCS12 -srcstorepass YOUR_JKS_PASSWORD -deststorepass changeit
+keytool -importkeystore -srckeystore "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks" -destkeystore "C:\apache-jmeter-5.6.3\bin\client.p12" -deststoretype PKCS12 -srcstorepass 7e5mXgS67SzQ -deststorepass changeit
 
-openssl pkcs12 -in client.p12 -clcerts -nokeys -out client-cert.pem -passin pass:changeit
+openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\client.p12" -clcerts -nokeys -out "C:\apache-jmeter-5.6.3\bin\client-cert.pem" -passin pass:changeit
 
-openssl pkcs12 -in client.p12 -nocerts -nodes -out client-key.pem -passin pass:changeit
+openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\client.p12" -nocerts -nodes -out "C:\apache-jmeter-5.6.3\bin\client-key.pem" -passin pass:changeit
 
-
-C:\Program Files\Java\jre1.8.0_481\bin>keytool -importkeystore -srckeystore "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks" -destkeystore client.p12 -deststoretype PKCS12 -srcstorepass 7e5mXgS67SzQ -deststorepass changeit
-Importing keystore C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks to client.p12...
-Entry for alias cc-gw-perfprodlocal successfully imported.
-Import command completed:  1 entries successfully imported, 0 entries failed or cancelled
-keytool error: java.io.FileNotFoundException: client.p12 (Access is denied)
+openssl s_client -connect 127.0.0.102:9444 -cert "C:\apache-jmeter-5.6.3\bin\client-cert.pem" -key "C:\apache-jmeter-5.6.3\bin\client-key.pem"
