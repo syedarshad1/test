@@ -1,13 +1,25 @@
-C:\path\to\curl-openssl\curl.exe -vk ^
-  --cert-type P12 ^
-  --cert "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.p12:7e5mXgS67SzQ" ^
-  -H "Content-Type: application/x-www-form-urlencoded" ^
-  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
-  https://127.0.0.102:9444/oauth2/token
+C:\Program Files\Java\jre1.8.0_481\bin>curl -vk ^
+More?   --cert-type P12 ^
+More?   --cert "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.p12:7e5mXgS67SzQ" ^
+More?   -H "Content-Type: application/x-www-form-urlencoded" ^
+More?   --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
+More?   https://127.0.0.102:9444/oauth2/token
+*   Trying 127.0.0.102:9444...
+* schannel: disabled automatic use of client certificate
+* schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package
+* closing connection #0
+curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package
 
-curl -vk ^
-  --cert "C:\apache-jmeter-5.6.3\bin\client-cert.pem" ^
-  --key "C:\apache-jmeter-5.6.3\bin\client-key.pem" ^
-  -H "Content-Type: application/x-www-form-urlencoded" ^
-  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
-  https://127.0.0.102:9444/oauth2/token
+C:\Program Files\Java\jre1.8.0_481\bin>curl -vk ^
+More?   --cert "C:\apache-jmeter-5.6.3\bin\client-cert.pem" ^
+More?   --key "C:\apache-jmeter-5.6.3\bin\client-key.pem" ^
+More?   -H "Content-Type: application/x-www-form-urlencoded" ^
+More?   --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
+More?   https://127.0.0.102:9444/oauth2/token
+*   Trying 127.0.0.102:9444...
+* schannel: disabled automatic use of client certificate
+* schannel: Failed to import cert file C:\apache-jmeter-5.6.3\bin\client-cert.pem, last error is 0x80092002
+* closing connection #0
+curl: (58) schannel: Failed to import cert file C:\apache-jmeter-5.6.3\bin\client-cert.pem, last error is 0x80092002
+
+C:\Program Files\Java\jre1.8.0_481\bin>
