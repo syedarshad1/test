@@ -1,31 +1,9 @@
-PS C:\Program Files\git\mingw64\bin> Add-Type @"
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-public class TrustAll : ICertificatePolicy {
-    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int problem) { return true; }
+try {
+    $cert = Get-ChildItem Cert:\CurrentUser\My\5CC89CB72FEB5C08048D92BD18047B67E9C250CB
+    $response = Invoke-WebRequest -Uri "https://127.0.0.102:9444/oauth2/token" -Method POST -Certificate $cert -ContentType "application/x-www-form-urlencoded" -Body "grant_type=client_credentials&client_id=XXX&client_secret=YYY"
+    $response.Content
+} catch {
+    $_.Exception.Message
+    $_.Exception.InnerException.Message
+    $_.Exception.InnerException.InnerException.Message
 }
-"@
-[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-$cert = Get-ChildItem Cert:\CurrentUser\My\5CC89CB72FEB5C08048D92BD18047B67E9C250CB
-
-Write-Host "Using cert: $($cert.Subject)"
-
-$response = Invoke-WebRequest -Uri "https://127.0.0.102:9444/oauth2/token" -Method POST -Certificate $cert -ContentType "application/x-www-form-urlencoded" -Body "grant_type=client_credentials&client_id=XXX&client_secret=YYY"
-$response.Content
-
-Add-Type : Cannot add type. The type name 'TrustAll' already exists.
-At line:1 char:1
-+ Add-Type @"
-+ ~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (TrustAll:String) [Add-Type], Exception
-    + FullyQualifiedErrorId : TYPE_ALREADY_EXISTS,Microsoft.PowerShell.Commands.AddTypeCommand
- 
-Using cert: E=codeconnect-support@fisglobal.com, CN=cc-gw-perf.prod.local, OU=FIS Code Connect, O=Fidelity National Information Services, L=Jacksonville, S=Florida, C=US
-Invoke-WebRequest : The underlying connection was closed: An unexpected error occurred on a send.
-At line:15 char:13
-+ $response = Invoke-WebRequest -Uri "https://127.0.0.102:9444/oauth2/t ...
-+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
-    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
