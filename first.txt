@@ -1,7 +1,18 @@
-keytool -importkeystore -srckeystore "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks" -destkeystore "C:\apache-jmeter-5.6.3\bin\client.p12" -deststoretype PKCS12 -srcstorepass 7e5mXgS67SzQ -deststorepass changeit
-
-openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\client.p12" -clcerts -nokeys -out "C:\apache-jmeter-5.6.3\bin\client-cert.pem" -passin pass:changeit
-
-openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\client.p12" -nocerts -nodes -out "C:\apache-jmeter-5.6.3\bin\client-key.pem" -passin pass:changeit
-
-openssl s_client -connect 127.0.0.102:9444 -cert "C:\apache-jmeter-5.6.3\bin\client-cert.pem" -key "C:\apache-jmeter-5.6.3\bin\client-key.pem"
+$ openssl s_client -connect 127.0.0.102:9444 -cert "C:\apache-jmeter-5.6.3\bin\client-cert.pem" -key "C:\apache-jmeter-5.6.3\bin\client-key.pem"
+CONNECTED(0000019C)
+write:errno=10054
+---
+no peer certificate available
+---
+No client certificate CA names sent
+---
+SSL handshake has read 0 bytes and written 293 bytes
+Verification: OK
+---
+New, (NONE), Cipher is (NONE)
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
