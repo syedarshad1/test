@@ -1,8 +1,27 @@
-Get-ChildItem Cert:\CurrentUser\My | Format-List Subject, Thumbprint
+C:\Program Files\Java\jre1.8.0_481\bin>netstat -an | findstr 9444
+  TCP    127.0.0.102:9444       0.0.0.0:0              LISTENING
+  TCP    [::1]:9444             [::]:0                 LISTENING
+
+$ openssl s_client 127.0.0.102:9444
+CONNECTED(00000188)
+write:errno=10054
+---
+no peer certificate available
+---
+No client certificate CA names sent
+---
+SSL handshake has read 0 bytes and written 293 bytes
+Verification: OK
+---
+New, (NONE), Cipher is (NONE)
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
 
 
-curl -vk ^
-  --cert CurrentUser\My\YOUR_THUMBPRINT_HERE ^
-  -H "Content-Type: application/x-www-form-urlencoded" ^
-  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
-  https://127.0.0.102:9444/oauth2/token
+i have p12 format cert
+
+C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.p12
