@@ -1,5 +1,5 @@
-openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.p12" -clcerts -nokeys -out client-cert.pem -passin pass:7e5m**SzQ
+keytool -importkeystore -srckeystore "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.jks" -destkeystore client.p12 -deststoretype PKCS12 -srcstorepass YOUR_JKS_PASSWORD -deststorepass changeit
 
-openssl pkcs12 -in "C:\apache-jmeter-5.6.3\bin\cc-gw-perfprodlocal.p12" -nocerts -nodes -out client-key.pem -passin pass:7e5m**SzQ
+openssl pkcs12 -in client.p12 -clcerts -nokeys -out client-cert.pem -passin pass:changeit
 
-openssl s_client -connect 127.0.0.102:9444 -cert client-cert.pem -key client-key.pem
+openssl pkcs12 -in client.p12 -nocerts -nodes -out client-key.pem -passin pass:changeit
