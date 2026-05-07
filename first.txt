@@ -1,3 +1,21 @@
-netstat -anob | findstr 9444
+e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
+$ netstat -anob | findstr 9444
+  TCP    127.0.0.102:9444       0.0.0.0:0              LISTENING       1560
+  TCP    [::1]:9444             [::]:0                 LISTENING       1560
 
-curl -vk http://127.0.0.102:9444/oauth2/token
+e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
+$ curl -vk http://127.0.0.102:9444/oauth2/token
+* processing: http://127.0.0.102:9444/oauth2/token
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.102:9444...
+* Connected to 127.0.0.102 (127.0.0.102) port 9444
+> GET /oauth2/token HTTP/1.1
+> Host: 127.0.0.102:9444
+> User-Agent: curl/8.2.1
+> Accept: */*
+>
+* Recv failure: Connection was reset
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* Closing connection
+curl: (56) Recv failure: Connection was reset
