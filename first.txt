@@ -1,3 +1,7 @@
-ssh e3016834@basbdclpcish01.fnfis.com
-
-curl -vk --noproxy "*" https://100.72.108.172:9444/oauth2/token
+e3016834@bdc1rnexlpibs03 [/home/e3016834]
+# curl -vk --noproxy "*" https://100.72.108.172:9444/oauth2/token
+* About to connect() to 100.72.108.172 port 9444 (#0)
+*   Trying 100.72.108.172... No route to host
+* couldn't connect to host
+* Closing connection #0
+curl: (7) couldn't connect to host
