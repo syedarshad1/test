@@ -1,7 +1,20 @@
-export CURL_SSL_BACKEND=openssl
-curl -vk \
+e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
+$ export CURL_SSL_BACKEND=openssl
+
+e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
+$ curl -vk \
   --cert "C:/apache-jmeter-5.6.3/bin/client-cert.pem" \
   --key "C:/apache-jmeter-5.6.3/bin/client-key.pem" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" \
   https://127.0.0.102:9444/oauth2/token
+* processing: https://127.0.0.102:9444/oauth2/token
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.102:9444...
+* Connected to 127.0.0.102 (127.0.0.102) port 9444
+* schannel: disabled automatic use of client certificate
+* schannel: Failed to import cert file C:/apache-jmeter-5.6.3/bin/client-cert.pem, last error is 0x80092002
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* Closing connection
+curl: (58) schannel: Failed to import cert file C:/apache-jmeter-5.6.3/bin/client-cert.pem, last error is 0x80092002
