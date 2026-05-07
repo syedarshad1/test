@@ -1,4 +1,4 @@
-Add-Type @"
+S C:\Program Files\git\mingw64\bin> Add-Type @"
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 public class TrustAll : ICertificatePolicy {
@@ -13,3 +13,13 @@ Write-Host "Using cert: $($cert.Subject)"
 
 $response = Invoke-WebRequest -Uri "https://127.0.0.102:9444/oauth2/token" -Method POST -Certificate $cert -ContentType "application/x-www-form-urlencoded" -Body "grant_type=client_credentials&client_id=XXX&client_secret=YYY"
 $response.Content
+Using cert: E=Syed.ArshadAli@fisglobal.com, CN="Ali, Syed A", OU=Menomonee Falls, OU=Americas, OU=Accounts, OU=FIS, DC=FNFIS, DC=com
+Invoke-WebRequest : The underlying connection was closed: An unexpected error occurred on a send.
+At line:14 char:13
++ $response = Invoke-WebRequest -Uri "https://127.0.0.102:9444/oauth2/t ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+
+
+may be you did not used the write thumbprint
