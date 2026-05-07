@@ -4,3 +4,11 @@
   -H "Content-Type: application/x-www-form-urlencoded" \
   --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" \
   https://127.0.0.102:9444/oauth2/token
+
+
+curl -vk \
+  --cert-type P12 \
+  --cert "C:/apache-jmeter-5.6.3/bin/cc-gw-perfprodlocal.p12:7e5mXgS67SzQ" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" \
+  https://127.0.0.102:9444/oauth2/token
