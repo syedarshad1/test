@@ -1,1 +1,8 @@
 Get-ChildItem Cert:\CurrentUser\My | Format-List Subject, Thumbprint
+
+
+curl -vk ^
+  --cert CurrentUser\My\YOUR_THUMBPRINT_HERE ^
+  -H "Content-Type: application/x-www-form-urlencoded" ^
+  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
+  https://127.0.0.102:9444/oauth2/token
