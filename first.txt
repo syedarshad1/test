@@ -1,3 +1,25 @@
-ssh -N -L 127.0.0.102:9444:localhost:9444 e3016834@127.0.0.6 -p 21952
-
-curl -vk --noproxy "*" https://127.0.0.102:9444/oauth2/token
+$ curl -vk --noproxy "*" https://127.0.0.102:9444/oauth2/token
+* processing: https://127.0.0.102:9444/oauth2/token
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.102:9444...
+* Connected to 127.0.0.102 (127.0.0.102) port 9444
+* schannel: disabled automatic use of client certificate
+* schannel: using IP address, SNI is not supported by OS.
+* using HTTP/1.x
+> GET /oauth2/token HTTP/1.1
+> Host: 127.0.0.102:9444
+> User-Agent: curl/8.2.1
+> Accept: */*
+>
+< HTTP/1.1 405
+< X-WSO2-TraceId: 72028665-b5b2-4ad3-b8f7-fbf1e136311d
+< X-Frame-Options: DENY
+< X-Content-Type-Options: nosniff
+< Allow: POST,GET,OPTIONS,HEAD
+< Date: Thu, 07 May 2026 06:13:48 GMT
+< Content-Length: 0
+< Server: WSO2 Carbon Server
+<
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* Connection #0 to host 127.0.0.102 left intact
