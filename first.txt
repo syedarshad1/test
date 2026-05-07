@@ -1,4 +1,12 @@
-curl -vk ^
- -H "Content-Type: application/x-www-form-urlencoded" ^
- --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
- https://127.0.0.102:9444/oauth2/token
+C:\Program Files\Java\jre1.8.0_481\bin>curl -vk ^
+More?  -H "Content-Type: application/x-www-form-urlencoded" ^
+More?  --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" ^
+More?  https://127.0.0.102:9444/oauth2/token
+*   Trying 127.0.0.102:9444...
+* schannel: disabled automatic use of client certificate
+* schannel: using IP address, SNI is not supported by OS.
+* ALPN: curl offers http/1.1
+* Recv failure: Connection was reset
+* schannel: failed to receive handshake, SSL/TLS connection failed
+* closing connection #0
+curl: (35) Recv failure: Connection was reset
