@@ -1,28 +1,17 @@
 e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
-$ curl -vk --cert-type P12 --cert "C:/apache-jmeter-5.6.3/bin/cc-gw-perfprodlocal.p12:7e5mXgS67SzQ" -H "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY" https://127.0.0.102:9444/oauth2/token
-* processing: https://127.0.0.102:9444/oauth2/token
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.102:9444...
-* Connected to 127.0.0.102 (127.0.0.102) port 9444
-* schannel: disabled automatic use of client certificate
-* schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-* Closing connection
-curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package
+$ which curl
+/mingw64/bin/curl
+
+e3016834@DS-AMER-yhaEFWn MINGW64 ~ (master)
+$ curl --version
+curl 8.2.1 (x86_64-w64-mingw32) libcurl/8.2.1 Schannel zlib/1.3 brotli/1.0.9 zstd/1.5.5 libidn2/2.3.4 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.11.0
+Release-Date: 2023-07-26
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp
+Features: alt-svc AsynchDNS brotli HSTS HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM PSL SPNEGO SSL SSPI threadsafe UnixSockets zstd
 
 
-PS C:\Program Files\git\mingw64\bin> curl.exe -vk --cert-type P12 --cert "C:/apache-jmeter-5.6.3/bin/cc-gw-perfprodlocal.p12:7e5mXgS67SzQ" -H "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=XXX&client_secret=YYY"  https://127.0.0.102:9444/oauth2/token
-curl.exe :   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-At line:1 char:1
-+ curl.exe -vk --cert-type P12 --cert "C:/apache-jmeter-5.6.3/bin/cc-gw ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (  % Total    % ...  Time  Current:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.102:9444...
-* schannel: disabled automatic use of client certificate
-* schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-* closing connection #0
+PS C:\Program Files\git\mingw64\bin> curl.exe --version
+curl 8.13.0 (Windows) libcurl/8.13.0 Schannel zlib/1.3.1 WinIDN
+Release-Date: 2025-04-02
+Protocols: dict file ftp ftps http https imap imaps ipfs ipns mqtt pop3 pop3s smb smbs smtp smtps telnet tftp ws wss
+Features: alt-svc AsynchDNS HSTS HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM SPNEGO SSL SSPI threadsafe Unicode UnixSockets
