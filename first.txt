@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="WSO2_Performance">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="WSO2_Performance_MixedLatency">
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments">
           <elementProp name="Date" elementType="Argument">
@@ -16,12 +16,12 @@
           </elementProp>
           <elementProp name="host" elementType="Argument">
             <stringProp name="Argument.name">host</stringProp>
-            <stringProp name="Argument.value">api-gw-prf.prod.local</stringProp>
+            <stringProp name="Argument.value">127.0.0.102</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="port" elementType="Argument">
             <stringProp name="Argument.name">port</stringProp>
-            <stringProp name="Argument.value"></stringProp>
+            <stringProp name="Argument.value">8243</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="protocol" elementType="Argument">
@@ -104,11 +104,11 @@
         </hashTree>
       </hashTree>
 
-      <!-- HappyDayScanrio_100ms: ENABLED - 100 TPS for 60 seconds -->
+      <!-- 50% traffic @ 100ms = 667 TPS = 40,020/min | 67 threads | 5 min = ~200,100 requests -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_100ms" enabled="true">
-        <intProp name="ThreadGroup.num_threads">100</intProp>
-        <intProp name="ThreadGroup.ramp_time">1</intProp>
-        <longProp name="ThreadGroup.duration">60</longProp>
+        <intProp name="ThreadGroup.num_threads">67</intProp>
+        <intProp name="ThreadGroup.ramp_time">5</intProp>
+        <longProp name="ThreadGroup.duration">300</longProp>
         <longProp name="ThreadGroup.delay">1</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
@@ -120,8 +120,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_100msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">${host}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
+          <stringProp name="HTTPSampler.port">8243</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_100msResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -133,12 +133,11 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <!-- Constant Throughput Timer: 100 requests/sec = 6000 per minute -->
           <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
             <intProp name="calcMode">1</intProp>
             <doubleProp>
               <name>throughput</name>
-              <value>6000.0</value>
+              <value>40020.0</value>
               <savedValue>0.0</savedValue>
             </doubleProp>
           </ConstantThroughputTimer>
@@ -169,11 +168,11 @@
         </hashTree>
       </hashTree>
 
-      <!-- All other thread groups DISABLED -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScario_300ms" enabled="false">
-        <intProp name="ThreadGroup.num_threads">200</intProp>
-        <intProp name="ThreadGroup.ramp_time">20</intProp>
-        <longProp name="ThreadGroup.duration">1800</longProp>
+      <!-- 25% traffic @ 300ms = 333 TPS = 19,980/min | 100 threads | 5 min = ~99,900 requests -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_300ms" enabled="true">
+        <intProp name="ThreadGroup.num_threads">100</intProp>
+        <intProp name="ThreadGroup.ramp_time">5</intProp>
+        <longProp name="ThreadGroup.duration">300</longProp>
         <longProp name="ThreadGroup.delay">1</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
@@ -185,8 +184,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_300msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">${host}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
+          <stringProp name="HTTPSampler.port">8243</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_300msResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -198,6 +197,15 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+            <intProp name="calcMode">1</intProp>
+            <doubleProp>
+              <name>throughput</name>
+              <value>19980.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="811069853">HappyDayScanrio , 300ms Response</stringProp>
@@ -207,10 +215,6 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
-          <hashTree/>
-          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Sleep" enabled="true">
-            <stringProp name="ConstantTimer.delay">250</stringProp>
-          </ConstantTimer>
           <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
@@ -227,11 +231,13 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_500ms" enabled="false">
-        <intProp name="ThreadGroup.num_threads">50</intProp>
+
+      <!-- 15% traffic @ 500ms = 200 TPS = 12,000/min | 100 threads | 5 min = ~60,000 requests -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_500ms" enabled="true">
+        <intProp name="ThreadGroup.num_threads">100</intProp>
         <intProp name="ThreadGroup.ramp_time">5</intProp>
-        <longProp name="ThreadGroup.duration">1800</longProp>
-        <longProp name="ThreadGroup.delay">2</longProp>
+        <longProp name="ThreadGroup.duration">300</longProp>
+        <longProp name="ThreadGroup.delay">1</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -242,8 +248,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_500msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">${host}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
+          <stringProp name="HTTPSampler.port">8243</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_500msResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -255,6 +261,15 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+            <intProp name="calcMode">1</intProp>
+            <doubleProp>
+              <name>throughput</name>
+              <value>12000.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-200047397">HappyDayScanrio , 500ms Response</stringProp>
@@ -264,10 +279,6 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
-          <hashTree/>
-          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Sleep" enabled="true">
-            <stringProp name="ConstantTimer.delay">250</stringProp>
-          </ConstantTimer>
           <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
@@ -284,10 +295,12 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_1sec" enabled="false">
-        <intProp name="ThreadGroup.num_threads">50</intProp>
+
+      <!-- 10% traffic @ 1sec = 133 TPS = 7,980/min | 133 threads | 5 min = ~39,900 requests -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_1sec" enabled="true">
+        <intProp name="ThreadGroup.num_threads">133</intProp>
         <intProp name="ThreadGroup.ramp_time">5</intProp>
-        <longProp name="ThreadGroup.duration">1800</longProp>
+        <longProp name="ThreadGroup.duration">300</longProp>
         <longProp name="ThreadGroup.delay">1</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
@@ -299,8 +312,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_1secResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">${host}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
+          <stringProp name="HTTPSampler.port">8243</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_1secResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -312,6 +325,15 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+            <intProp name="calcMode">1</intProp>
+            <doubleProp>
+              <name>throughput</name>
+              <value>7980.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1806295028">HappyDayScanrio , 1sec Response</stringProp>
@@ -321,10 +343,6 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
-          <hashTree/>
-          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Sleep" enabled="true">
-            <stringProp name="ConstantTimer.delay">250</stringProp>
-          </ConstantTimer>
           <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
