@@ -40,6 +40,7 @@
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
+      <!-- setUp Thread Group: Get OAuth Token -->
       <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -51,7 +52,7 @@
         </elementProp>
       </SetupThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request">
           <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
           <stringProp name="HTTPSampler.port">9444</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -102,7 +103,9 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_100ms">
+
+      <!-- HappyDayScanrio_100ms: ENABLED - 100 TPS for 60 seconds -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScanrio_100ms" enabled="true">
         <intProp name="ThreadGroup.num_threads">100</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <longProp name="ThreadGroup.duration">60</longProp>
@@ -116,9 +119,9 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_100msResponse">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_100msResponse" enabled="true">
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_100msResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -130,8 +133,9 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer">
-            <intProp name="calcMode">4</intProp>
+          <!-- Constant Throughput Timer: 100 requests/sec = 6000 per minute -->
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+            <intProp name="calcMode">1</intProp>
             <doubleProp>
               <name>throughput</name>
               <value>6000.0</value>
@@ -164,6 +168,8 @@
           <hashTree/>
         </hashTree>
       </hashTree>
+
+      <!-- All other thread groups DISABLED -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HappyDayScario_300ms" enabled="false">
         <intProp name="ThreadGroup.num_threads">200</intProp>
         <intProp name="ThreadGroup.ramp_time">20</intProp>
@@ -179,8 +185,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_300msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_300msResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -293,8 +299,8 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_1secResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_1secResponse</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -335,7 +341,9 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+
+      <!-- Listeners -->
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -372,7 +380,7 @@
         <stringProp name="filename">${Results_File}</stringProp>
       </ResultCollector>
       <hashTree/>
-      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report">
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
