@@ -131,7 +131,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer">
-            <intProp name="calcMode">1</intProp>
+            <intProp name="calcMode">4</intProp>
             <doubleProp>
               <name>throughput</name>
               <value>6000.0</value>
