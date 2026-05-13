@@ -1,14 +1,5 @@
-# Get WSO2 PID
-WSO2_PID=$(pgrep -f "wso2carbon")
+# Set jstack path
+JSTACK=/opt/codeconnect/openjdk-17.0.18/bin/jstack
 
-# Count active PassThrough worker threads every 2 seconds
-while true; do
-  ACTIVE=$(jstack $WSO2_PID 2>/dev/null | grep "PassThroughMessageProcessor" | grep -c "RUNNABLE")
-  WAITING=$(jstack $WSO2_PID 2>/dev/null | grep "PassThroughMessageProcessor" | grep -c "WAITING")
-  TOTAL=$(jstack $WSO2_PID 2>/dev/null | grep -c "PassThroughMessageProcessor")
-  echo "$(date) - Total: $TOTAL | Active: $ACTIVE | Waiting: $WAITING"
-  sleep 2
-done
-
-WSO2_PID=$(pgrep -f "wso2carbon")
-jstack $WSO2_PID | grep "Thread" | head -50
+# First, see what worker threads are called
+$JSTACK 3772 | grep -i "passthrough\|worker\|sender\|listener\|http" | head -30
