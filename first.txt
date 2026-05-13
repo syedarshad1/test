@@ -1,8 +1,12 @@
-# Check open connections
-lsof -p 3772 | wc -l
-
-# Check file descriptor limit
-cat /proc/3772/limits | grep "open files"
-
-# Check network connections to WireMock
-ss -tn | grep 8243 | wc -l
+$ lsof -p 3772 | wc -l
+lsof: WARNING: can't stat() xfs file system /opt/IBM/ITM
+      Output information may be incomplete.
+lsof: WARNING: can't stat() xfs file system /opt/IBM/ITM/logs
+      Output information may be incomplete.
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+2455
+$ cat /proc/3772/limits | grep "open files"
+Max open files            262144               262144               files
+$ ss -tn | grep 8243 | wc -l
+591
