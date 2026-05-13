@@ -1,12 +1,14 @@
-$ lsof -p 3772 | wc -l
-lsof: WARNING: can't stat() xfs file system /opt/IBM/ITM
-      Output information may be incomplete.
-lsof: WARNING: can't stat() xfs file system /opt/IBM/ITM/logs
-      Output information may be incomplete.
-lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
-      Output information may be incomplete.
-2455
-$ cat /proc/3772/limits | grep "open files"
-Max open files            262144               262144               files
-$ ss -tn | grep 8243 | wc -l
-591
+index=wso2 source=prd_wso2_usage_logs host=xyz earliest=-1h
+| eval response_bucket = case(
+    usg_rsp_time_ms >= 0 AND usg_rsp_time_ms < 100, "0-100ms",
+    usg_rsp_time_ms >= 100 AND usg_rsp_time_ms < 300, "100-300ms",
+    usg_rsp_time_ms >= 300 AND usg_rsp_time_ms < 500, "300-500ms",
+    usg_rsp_time_ms >= 500 AND usg_rsp_time_ms < 1000, "500ms-1sec",
+    usg_rsp_time_ms >= 1000, ">=1sec",
+    true(), "unknown"
+  )
+| stats count as requests by response_bucket
+| eventstats sum(requests) as total
+| eval percentage = round((requests/total)*100, 2)
+| fields response_bucket requests percentage
+| sort response_bucket
