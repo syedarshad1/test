@@ -1,36 +1,14 @@
-# Watch WSO2 thread count every 1 second
+# Get WSO2 PID
+WSO2_PID=$(pgrep -f "wso2carbon")
+
+# Count active PassThrough worker threads every 2 seconds
 while true; do
-  echo "$(date) - Threads: $(ps -eLf | grep wso2 | wc -l)"
-  sleep 1
-done
-
-$ while true; do
->   echo "$(date) - Threads: $(ps -eLf | grep wso2 | wc -l)"
->   sleep 1
-> done
-Tue May 12 21:29:00 CDT 2026 - Threads: 2667
-Tue May 12 21:29:02 CDT 2026 - Threads: 2667
-Tue May 12 21:29:03 CDT 2026 - Threads: 2667
-Tue May 12 21:29:05 CDT 2026 - Threads: 2667
-
-
-bash# Get WSO2 PID first
-ps aux | grep wso2
-
-# Then watch thread states every second (replace <PID>)
-while true; do
-  echo "=== $(date) ==="
-  jstack 3772 | grep "state=" | sort | uniq -c | sort -rn
+  ACTIVE=$(jstack $WSO2_PID 2>/dev/null | grep "PassThroughMessageProcessor" | grep -c "RUNNABLE")
+  WAITING=$(jstack $WSO2_PID 2>/dev/null | grep "PassThroughMessageProcessor" | grep -c "WAITING")
+  TOTAL=$(jstack $WSO2_PID 2>/dev/null | grep -c "PassThroughMessageProcessor")
+  echo "$(date) - Total: $TOTAL | Active: $ACTIVE | Waiting: $WAITING"
   sleep 2
 done
 
-$ while true; do
->   echo "=== $(date) ==="
->   jstack 3772 | grep "state=" | sort | uniq -c | sort -rn
->   sleep 2
-> done
-=== Tue May 12 21:29:58 CDT 2026 ===
--bash: jstack: command not found
-=== Tue May 12 21:30:00 CDT 2026 ===
--bash: jstack: command not found
-
+WSO2_PID=$(pgrep -f "wso2carbon")
+jstack $WSO2_PID | grep "Thread" | head -50
