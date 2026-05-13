@@ -1,14 +1,10 @@
-index=wso2 source=prd_wso2_usage_logs host=xyz earliest=-1h
-| eval response_bucket = case(
-    usg_rsp_time_ms >= 0 AND usg_rsp_time_ms < 100, "0-100ms",
-    usg_rsp_time_ms >= 100 AND usg_rsp_time_ms < 300, "100-300ms",
-    usg_rsp_time_ms >= 300 AND usg_rsp_time_ms < 500, "300-500ms",
-    usg_rsp_time_ms >= 500 AND usg_rsp_time_ms < 1000, "500ms-1sec",
-    usg_rsp_time_ms >= 1000, ">=1sec",
+| eval lat = tonumber(usg_rsp_time_ms)
+| eval lat_bucket = case(
+    lat >= 0 AND lat < 100, "0-100ms",
+    lat >= 100 AND lat < 300, "100-300ms",
+    lat >= 300 AND lat < 500, "300-500ms",
+    lat >= 500 AND lat < 1000, "500ms-1sec",
+    lat >= 1000, ">=1sec",
     true(), "unknown"
   )
-| stats count as requests by response_bucket
-| eventstats sum(requests) as total
-| eval percentage = round((requests/total)*100, 2)
-| fields response_bucket requests percentage
-| sort response_bucket
+| timechart span=1h count by lat_bucket limit=0
