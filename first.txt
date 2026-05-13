@@ -1,46 +1,5 @@
-Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
-summary +    193 in 00:00:15 =   13.2/s Avg:   263 Min:   110 Max: 10950 Err:     0 (0.00%) Active: 57 Started: 57 Finished: 0
-summary +   8831 in 00:00:30 =  294.4/s Avg:   210 Min:   107 Max:   370 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =   9024 in 00:00:45 =  202.2/s Avg:   211 Min:   107 Max: 10950 Err:     0 (0.00%)
-summary +   9009 in 00:00:30 =  300.3/s Avg:   209 Min:   106 Max:   379 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  18033 in 00:01:15 =  241.6/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9012 in 00:00:30 =  300.4/s Avg:   210 Min:   106 Max:   386 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  27045 in 00:01:45 =  258.5/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9011 in 00:00:30 =  300.4/s Avg:   210 Min:   107 Max:   393 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  36056 in 00:02:15 =  267.8/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9009 in 00:00:30 =  300.3/s Avg:   210 Min:   106 Max:   389 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  45065 in 00:02:45 =  273.7/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9010 in 00:00:30 =  300.3/s Avg:   210 Min:   106 Max:   377 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  54075 in 00:03:15 =  277.8/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9013 in 00:00:30 =  300.5/s Avg:   210 Min:   106 Max:   391 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  63088 in 00:03:45 =  280.9/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9009 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   401 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  72097 in 00:04:15 =  283.1/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9010 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   403 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
-summary =  81107 in 00:04:45 =  285.0/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   9009 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   400 Err:     0 (0.00%) Active: 458 Started: 458 Finished: 0
-summary =  90116 in 00:05:15 =  286.4/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
-summary +   6474 in 00:01:00 =  107.9/s Avg:  2588 Min:     6 Max: 61046 Err:  1500 (23.17%) Active: 6110 Started: 6110 Finished: 0
-summary =  96590 in 00:06:15 =  257.8/s Avg:   370 Min:     6 Max: 61046 Err:  1500 (1.55%)
-summary +   5077 in 00:00:30 =  169.3/s Avg: 42458 Min:     7 Max: 73755 Err:  3492 (68.78%) Active: 6110 Started: 6110 Finished: 0
-summary = 101667 in 00:06:45 =  251.3/s Avg:  2471 Min:     6 Max: 73755 Err:  4992 (4.91%)
-summary +  12263 in 00:00:30 =  408.8/s Avg:  7080 Min:     6 Max: 90129 Err: 12109 (98.74%) Active: 6110 Started: 6110 Finished: 0
-summary = 113930 in 00:07:15 =  262.1/s Avg:  2967 Min:     6 Max: 90129 Err: 17101 (15.01%)
-summary +   4989 in 00:00:31 =  161.9/s Avg: 21924 Min:   107 Max: 90096 Err:  1757 (35.22%) Active: 6110 Started: 6110 Finished: 0
-summary = 118919 in 00:07:45 =  255.5/s Avg:  3763 Min:     6 Max: 90129 Err: 18858 (15.86%)
-summary +   3345 in 00:00:29 =  114.6/s Avg:  1372 Min:     6 Max: 61027 Err:  3328 (99.49%) Active: 6110 Started: 6110 Finished: 0
-summary = 122264 in 00:08:15 =  247.2/s Avg:  3697 Min:     6 Max: 90129 Err: 22186 (18.15%)
-summary +   2112 in 00:00:30 =   69.9/s Avg: 57132 Min:   108 Max: 72126 Err:  1960 (92.80%) Active: 6110 Started: 6110 Finished: 0
-summary = 124376 in 00:08:45 =  237.0/s Avg:  4605 Min:     6 Max: 90129 Err: 24146 (19.41%)
-summary +   9032 in 00:00:30 =  303.2/s Avg: 21140 Min:     6 Max: 90384 Err:  9031 (99.99%) Active: 5852 Started: 6110 Finished: 258
-summary = 133408 in 00:09:15 =  240.5/s Avg:  5724 Min:     6 Max: 90384 Err: 33177 (24.87%)
-summary +   2025 in 00:00:30 =   66.9/s Avg: 53780 Min:     6 Max: 90745 Err:  1815 (89.63%) Active: 5825 Started: 6110 Finished: 285
-summary = 135433 in 00:09:45 =  231.6/s Avg:  6443 Min:     6 Max: 90745 Err: 34992 (25.84%)
-summary +   4575 in 00:00:30 =  152.5/s Avg:  4188 Min:     6 Max: 90096 Err:  4569 (99.87%) Active: 2977 Started: 6110 Finished: 3133
-summary = 140008 in 00:10:15 =  227.7/s Avg:  6369 Min:     6 Max: 90745 Err: 39561 (28.26%)
-summary +   2018 in 00:00:31 =   65.0/s Avg: 63800 Min: 30000 Max: 91595 Err:  1957 (96.98%) Active: 959 Started: 6110 Finished: 5151
-summary = 142026 in 00:10:46 =  219.9/s Avg:  7185 Min:     6 Max: 91595 Err: 41518 (29.23%)
-summary +     20 in 00:00:29 =    0.7/s Avg: 62633 Min: 61008 Max: 90044 Err:    20 (100.00%) Active: 938 Started: 6110 Finished: 5172
-summary = 142046 in 00:11:15 =  210.5/s Avg:  7193 Min:     6 Max: 91595 Err: 41538 (29.24%)
-summary +    938 in 00:00:03 =  283.3/s Avg: 90375 Min: 90006 Max: 91354 Err:   938 (100.00%) Active: 0 Started: 6110 Finished: 6110
-summary = 142984 in 00:11:18 =  210.8/s Avg:  7738 Min:     6 Max: 91595 Err: 42476 (29.71%)
+Total	142984	42476	29.71%	7738.94	6	91595	29718.50	61028.00	90128.95	91102.98	210.84	297.54	258.76
+HappyDayScanrio_60secResponse	29481	29481	100.00%	35958.36	6	91595	59770.50	61040.00	90128.95	91102.98	80.30	195.31	93.35
+HappyDayScanrio_100msResponse	55297	5776	10.45%	271.66	6	73755	108.00	119.00	139.00	29835.00	90.05	101.14	112.03
+HappyDayScanrio_300msResponse	58205	7219	12.40%	539.87	6	73325	308.00	318.00	346.00	31204.99	94.73	110.62	117.86
+HTTP Request	1	0	0.00%	10950.00	10950	10950	10950.00	10950.00	10950.00	10950.00	0.09	0.13	0.03
