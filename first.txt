@@ -1,17 +1,15 @@
 index=wso2 source=prd_wso2_usage_logs host=xyz earliest=-24h
 | eval lat = tonumber(usg_rsp_time_ms)
-| eval lat_bucket = case(
-    lat >= 0 AND lat < 100, "0-100ms",
-    lat >= 100 AND lat < 300, "100-300ms",
-    lat >= 300 AND lat < 500, "300-500ms",
-    lat >= 500 AND lat < 1000, "500ms-1sec",
-    lat >= 1000, ">=1sec",
-    true(), "unknown"
-  )
+| eval b1 = if(lat>=0 AND lat<100, 1, 0)
+| eval b2 = if(lat>=100 AND lat<300, 1, 0)
+| eval b3 = if(lat>=300 AND lat<500, 1, 0)
+| eval b4 = if(lat>=500 AND lat<1000, 1, 0)
+| eval b5 = if(lat>=1000, 1, 0)
 | bin _time span=1h
-| stats count as total count(eval(lat_bucket="0-100ms")) as "0-100ms" count(eval(lat_bucket="100-300ms")) as "100-300ms" count(eval(lat_bucket="300-500ms")) as "300-500ms" count(eval(lat_bucket="500ms-1sec")) as "500ms-1sec" count(eval(lat_bucket=">=1sec")) as ">=1sec" by _time
-| eval "0-100ms%" = round(('0-100ms'/total)*100,1)
-| eval "100-300ms%" = round(('100-300ms'/total)*100,1)
-| eval "300-500ms%" = round(('300-500ms'/total)*100,1)
-| eval "500ms-1sec%" = round(('500ms-1sec'/total)*100,1)
-| eval ">=1sec%" = round(('>=1sec'/total)*100,1)
+| stats sum(b1) as cnt_0_100 sum(b2) as cnt_100_300 sum(b3) as cnt_300_500 sum(b4) as cnt_500_1s sum(b5) as cnt_gt1s count as total by _time
+| eval pct_0_100 = round((cnt_0_100/total)*100, 1)
+| eval pct_100_300 = round((cnt_100_300/total)*100, 1)
+| eval pct_300_500 = round((cnt_300_500/total)*100, 1)
+| eval pct_500_1s = round((cnt_500_1s/total)*100, 1)
+| eval pct_gt1s = round((cnt_gt1s/total)*100, 1)
+| table _time total cnt_0_100 pct_0_100 cnt_100_300 pct_100_300 cnt_300_500 pct_300_500 cnt_500_1s pct_500_1s cnt_gt1s pct_gt1s
