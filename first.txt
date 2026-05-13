@@ -1,5 +1,21 @@
 # Set jstack path
 JSTACK=/opt/codeconnect/openjdk-17.0.18/bin/jstack
-
-# First, see what worker threads are called
 $JSTACK 3772 | grep -i "passthrough\|worker\|sender\|listener\|http" | head -30
+
+$ $JSTACK 3772 | grep -i "passthrough\|worker\|sender\|listener\|http" | head -30
+"oneagentsubpathsender 1.333.55.20260317-092136" #15 daemon prio=5 os_prio=0 cpu=552155.73ms elapsed=2243845.60s tid=0x00007fe53c0015b0 nid=0x125a runnable  [0x0000000000000000]
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1122)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@17.0.18/ThreadPoolExecutor.java:635)
+"Worker-JM" #46 prio=5 os_prio=0 cpu=0.23ms elapsed=2243832.14s tid=0x00007fe45c0e46e0 nid=0x210c in Object.wait()  [0x00007fe4a23e2000]
+        at org.eclipse.core.internal.jobs.InternalWorker.run(InternalWorker.java:58)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1122)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@17.0.18/ThreadPoolExecutor.java:635)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1122)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@17.0.18/ThreadPoolExecutor.java:635)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1136)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@17.0.18/ThreadPoolExecutor.java:635)
+        at org.apache.http.impl.client.IdleConnectionEvictor$1.run(IdleConnectionEvictor.java:66)
+        at org.apache.http.impl.client.IdleConnectionEvictor$1.run(IdleConnectionEvictor.java:66)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1136)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@17.0.18/ThreadPoolExecutor.java:635)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@17.0.18/ThreadPoolExecutor.java:1122)
