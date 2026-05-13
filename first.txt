@@ -7,3 +7,17 @@ while true; do
   echo "$(date +%H:%M:%S) | Active: $RUNNABLE | Waiting: $WAITING | Blocked: $BLOCKED"
   sleep 3
 done
+
+Before Running
+21:44:22 | Active: 61 | Waiting: 328 | Blocked: 74
+21:44:26 | Active: 61 | Waiting: 329 | Blocked: 74
+21:44:30 | Active: 61 | Waiting: 329 | Blocked: 74
+21:44:34 | Active: 61 | Waiting: 329 | Blocked: 74
+
+During Testing
+21:48:50 | Active: 63 | Waiting: 328 | Blocked: 74
+21:48:54 | Active: 62 | Waiting: 328 | Blocked: 74
+21:48:59 | Active: 64 | Waiting: 329 | Blocked: 74
+21:49:04 | Active: 62 | Waiting: 326 | Blocked: 74
+21:49:09 | Active: 68 | Waiting: 327 | Blocked: 74
+21:49:14 | Active: 67 | Waiting: 326 | Blocked: 74
