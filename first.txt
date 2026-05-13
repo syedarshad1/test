@@ -4,12 +4,33 @@ while true; do
   sleep 1
 done
 
+$ while true; do
+>   echo "$(date) - Threads: $(ps -eLf | grep wso2 | wc -l)"
+>   sleep 1
+> done
+Tue May 12 21:29:00 CDT 2026 - Threads: 2667
+Tue May 12 21:29:02 CDT 2026 - Threads: 2667
+Tue May 12 21:29:03 CDT 2026 - Threads: 2667
+Tue May 12 21:29:05 CDT 2026 - Threads: 2667
+
+
 bash# Get WSO2 PID first
 ps aux | grep wso2
 
 # Then watch thread states every second (replace <PID>)
 while true; do
   echo "=== $(date) ==="
-  jstack <PID> | grep "state=" | sort | uniq -c | sort -rn
+  jstack 3772 | grep "state=" | sort | uniq -c | sort -rn
   sleep 2
 done
+
+$ while true; do
+>   echo "=== $(date) ==="
+>   jstack 3772 | grep "state=" | sort | uniq -c | sort -rn
+>   sleep 2
+> done
+=== Tue May 12 21:29:58 CDT 2026 ===
+-bash: jstack: command not found
+=== Tue May 12 21:30:00 CDT 2026 ===
+-bash: jstack: command not found
+
