@@ -1,16 +1,15 @@
-Statistics
+# Watch WSO2 thread count every 1 second
+while true; do
+  echo "$(date) - Threads: $(ps -eLf | grep wso2 | wc -l)"
+  sleep 1
+done
 
-Label Sample FAIL Error Avg Min Max Median 90thpct 95thpct 99thpct  transactions/s received sent
-Total	287990	0	0.00%	413.06	107	5825	338.00	1028.00	1065.00	1179.00	935.08	835.24	1163.25
-HappyDayScanrio_1secResponse	36918	0	0.00%	1072.96	1007	2179	1051.00	1176.00	1238.00	1346.00	122.64	109.45	152.46
-HappyDayScanrio_100msResponse	119049	0	0.00%	167.13	107	1297	145.00	240.00	285.00	375.00	396.67	354.35	493.52
-HappyDayScanrio_300msResponse	80158	0	0.00%	370.64	307	1467	360.00	470.00	510.00	592.99	266.89	238.43	332.04
-HappyDayScanrio_500msResponse	51864	0	0.00%	573.31	507	1643	553.00	670.00	720.00	814.00	172.63	154.22	214.78
-HTTP Request	1	0	0.00%	5825.00	5825	5825	5825.00	5825.00	5825.00	5825.00	0.17	0.24	0.06
+bash# Get WSO2 PID first
+ps aux | grep wso2
 
-GET /mock-apis/v1/HappyDayScanrio_100msResponse	119,049	41.308%	
-GET /mock-apis/v1/HappyDayScanrio_300msResponse	80,158	27.813%	
-GET /mock-apis/v1/HappyDayScanrio_500msResponse	51,864	17.996%	
-GET /mock-apis/v1/HappyDayScanrio_1secResponse	36,918	12.81%	
-
-
+# Then watch thread states every second (replace <PID>)
+while true; do
+  echo "=== $(date) ==="
+  jstack <PID> | grep "state=" | sort | uniq -c | sort -rn
+  sleep 2
+done
