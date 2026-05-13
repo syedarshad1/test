@@ -1,4 +1,9 @@
-$JSTACK 3772 | grep "^\"" | grep -i "PassThrough\|HTTP-Sender\|HTTP-Listener\|HTTPS-Sender\|HTTPS-Listener\|I/O dispatcher" | head -50
+JSTACK=/opt/codeconnect/openjdk-17.0.18/bin/jstack
 
-$JSTACK 3772 | grep "^\"" | wc -l
-$JSTACK 3772 | grep "^\"" | grep -i "dispatcher\|PassThrough" | wc -l
+while true; do
+  RUNNABLE=$($JSTACK 3772 2>/dev/null | grep -A1 "dispatcher\|PassThrough" | grep -c "RUNNABLE")
+  WAITING=$($JSTACK 3772 2>/dev/null | grep -A1 "dispatcher\|PassThrough" | grep -c "WAITING\|TIMED_WAITING")
+  BLOCKED=$($JSTACK 3772 2>/dev/null | grep -A1 "dispatcher\|PassThrough" | grep -c "BLOCKED")
+  echo "$(date +%H:%M:%S) | Active: $RUNNABLE | Waiting: $WAITING | Blocked: $BLOCKED"
+  sleep 3
+done
