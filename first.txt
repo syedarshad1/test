@@ -23,17 +23,16 @@ this is for just 300ms
 
 this is for just 500ms
 
-index="wso2-perf" sourcetype=prf_wso2_usage_logs host=bdc9rcdcapiap01 usg_resource_path="mock-apis/v1/HappyDayScanrio_500msResponse"
-| eval lat = tonumber(usg_bckend_latency)
-| eval lat_bucket = case(
-    lat >= 500 AND lat < 520,  "500-520",
-    lat >= 520 AND lat < 580,  "520-580",
-    lat >= 580 AND lat < 600,  "580-600",
-    lat >= 600 AND lat < 1000, "600-1000",
-    lat >= 1000,               ">=1000",
-    true(),                    "unknown"
-  )
-| timechart span=1m count as events by lat_bucket limit=0
+_time	500-520	520-580	580-600	600-1000
+2026-05-12 19:04:00	0	0	0	0
+2026-05-12 19:05:00	3431	322	4	7
+2026-05-12 19:06:00	9230	1119	16	27
+2026-05-12 19:07:00	9377	1152	10	1
+2026-05-12 19:08:00	8964	1259	7	2
+2026-05-12 19:09:00	9421	912	3	1
+2026-05-12 19:10:00	5745	851	2	1
+2026-05-12 19:11:00	0	0	0	0
+2026-05-12 19:12:00	0	0	0	0
 
 this is for just 1sec
 
