@@ -1,378 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
-  <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="WSO2_CrashTest_BackendFailure">
-      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-        <collectionProp name="Arguments.arguments">
-          <elementProp name="protocol" elementType="Argument">
-            <stringProp name="Argument.name">protocol</stringProp>
-            <stringProp name="Argument.value">https</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="uuid" elementType="Argument">
-            <stringProp name="Argument.name">uuid</stringProp>
-            <stringProp name="Argument.value">c02780cc-3a23-47ff-9289-ac5c7e3b68f6</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="Results_File" elementType="Argument">
-            <stringProp name="Argument.name">Results_File</stringProp>
-            <stringProp name="Argument.value"></stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-        </collectionProp>
-      </elementProp>
-      <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
-    </TestPlan>
-    <hashTree>
-
-      <!-- setUp Thread Group: Get OAuth Token -->
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group">
-        <intProp name="ThreadGroup.num_threads">1</intProp>
-        <intProp name="ThreadGroup.ramp_time">1</intProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <stringProp name="LoopController.loops">1</stringProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </SetupThreadGroup>
-      <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">9444</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.path">/oauth2/token</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="grant_type" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">client_credentials</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">grant_type</stringProp>
-              </elementProp>
-              <elementProp name="client_id" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dGDfYDa1WJFrKCPSnDj6uXzcCYca</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">client_id</stringProp>
-              </elementProp>
-              <elementProp name="client_secret" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">SJ8W49fvB16O1fIdDJLzotAFVJEa</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">client_secret</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">bearerToken</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">access_token</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
-          <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
-            <stringProp name="BeanShellAssertion.query">${__setProperty(bearerToken, ${bearerToken})}</stringProp>
-            <stringProp name="BeanShellAssertion.filename"></stringProp>
-            <stringProp name="BeanShellAssertion.parameters"></stringProp>
-            <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
-          </BeanShellAssertion>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-
-      <!-- ============================================= -->
-      <!-- PHASE 1 & 2: Normal traffic - runs full 10 min -->
-      <!-- ============================================= -->
-
-      <!-- 100ms API: 150 TPS for full 10 minutes (600 sec) -->
-      <!-- 150 TPS with 100ms latency: each thread ~10 req/sec, need ~25 threads -->
-      <!-- With overhead ~170ms: each thread ~6 req/sec, need ~30 threads -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Normal_100ms_150TPS" enabled="true">
-        <intProp name="ThreadGroup.num_threads">40</intProp>
-        <intProp name="ThreadGroup.ramp_time">5</intProp>
-        <longProp name="ThreadGroup.duration">600</longProp>
-        <longProp name="ThreadGroup.delay">1</longProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </ThreadGroup>
-      <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_100msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-          <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_100msResponse</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-            <intProp name="calcMode">0</intProp>
-            <doubleProp>
-              <name>throughput</name>
-              <value>225.0</value>
-              <savedValue>0.0</savedValue>
-            </doubleProp>
-          </ConstantThroughputTimer>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="1822187103">HappyDayScanrio , 100ms Response</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">uuid</stringProp>
-                <stringProp name="Header.value">${uuid}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${__property(bearerToken)}</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-
-      <!-- 300ms API: 150 TPS for full 10 minutes (600 sec) -->
-      <!-- 150 TPS with 300ms latency: each thread ~3 req/sec, need ~50 threads -->
-      <!-- With overhead ~370ms: each thread ~2.7 req/sec, need ~60 threads -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Normal_300ms_150TPS" enabled="true">
-        <intProp name="ThreadGroup.num_threads">70</intProp>
-        <intProp name="ThreadGroup.ramp_time">5</intProp>
-        <longProp name="ThreadGroup.duration">600</longProp>
-        <longProp name="ThreadGroup.delay">1</longProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </ThreadGroup>
-      <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_300msResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-          <stringProp name="HTTPSampler.path">/mock-apis/v1/HappyDayScanrio_300msResponse</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-            <intProp name="calcMode">0</intProp>
-            <doubleProp>
-              <name>throughput</name>
-              <value>129.0</value>
-              <savedValue>0.0</savedValue>
-            </doubleProp>
-          </ConstantThroughputTimer>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="811069853">HappyDayScanrio , 300ms Response</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${__property(bearerToken)}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">uuid</stringProp>
-                <stringProp name="Header.value">${uuid}</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-
-      <!-- ============================================= -->
-      <!-- PHASE 2: Backend failure - starts at minute 5 -->
-      <!-- ============================================= -->
-
-      <!-- 60sec API: 200 TPS starting at 5 min mark, runs for 5 min -->
-      <!-- 200 TPS with 60s latency: need 200 x 60 = 12,000 threads -->
-      <!-- These threads will pile up as each waits 60s for response -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="BackendFailure_60sec_200TPS" enabled="true">
-        <intProp name="ThreadGroup.num_threads">6000</intProp>
-        <intProp name="ThreadGroup.ramp_time">60</intProp>
-        <longProp name="ThreadGroup.duration">300</longProp>
-        <longProp name="ThreadGroup.delay">300</longProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </ThreadGroup>
-      <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HappyDayScanrio_60secResponse" enabled="true">
-          <stringProp name="HTTPSampler.domain">127.0.0.102</stringProp>
-          <stringProp name="HTTPSampler.port">8243</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-          <stringProp name="HTTPSampler.path">/mock-apis/v1/60SecTimeout</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.connect_timeout">90000</stringProp>
-          <stringProp name="HTTPSampler.response_timeout">90000</stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-            <intProp name="calcMode">0</intProp>
-            <doubleProp>
-              <name>throughput</name>
-              <value>1.0</value>
-              <savedValue>0.0</savedValue>
-            </doubleProp>
-          </ConstantThroughputTimer>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="60SecTimeout">60SecTimeout</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">uuid</stringProp>
-                <stringProp name="Header.value">${uuid}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${__property(bearerToken)}</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-
-      <!-- Listeners -->
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>false</xml>
-            <fieldNames>true</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-            <sentBytes>true</sentBytes>
-            <url>true</url>
-            <threadCounts>true</threadCounts>
-            <idleTime>true</idleTime>
-            <connectTime>true</connectTime>
-          </value>
-        </objProp>
-        <stringProp name="filename">${Results_File}</stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>false</xml>
-            <fieldNames>true</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-            <sentBytes>true</sentBytes>
-            <url>true</url>
-            <threadCounts>true</threadCounts>
-            <idleTime>true</idleTime>
-            <connectTime>true</connectTime>
-          </value>
-        </objProp>
-        <stringProp name="filename">${Results_File}</stringProp>
-      </ResultCollector>
-      <hashTree/>
-    </hashTree>
-  </hashTree>
-</jmeterTestPlan>
+Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
+summary +    193 in 00:00:15 =   13.2/s Avg:   263 Min:   110 Max: 10950 Err:     0 (0.00%) Active: 57 Started: 57 Finished: 0
+summary +   8831 in 00:00:30 =  294.4/s Avg:   210 Min:   107 Max:   370 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =   9024 in 00:00:45 =  202.2/s Avg:   211 Min:   107 Max: 10950 Err:     0 (0.00%)
+summary +   9009 in 00:00:30 =  300.3/s Avg:   209 Min:   106 Max:   379 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  18033 in 00:01:15 =  241.6/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9012 in 00:00:30 =  300.4/s Avg:   210 Min:   106 Max:   386 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  27045 in 00:01:45 =  258.5/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9011 in 00:00:30 =  300.4/s Avg:   210 Min:   107 Max:   393 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  36056 in 00:02:15 =  267.8/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9009 in 00:00:30 =  300.3/s Avg:   210 Min:   106 Max:   389 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  45065 in 00:02:45 =  273.7/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9010 in 00:00:30 =  300.3/s Avg:   210 Min:   106 Max:   377 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  54075 in 00:03:15 =  277.8/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9013 in 00:00:30 =  300.5/s Avg:   210 Min:   106 Max:   391 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  63088 in 00:03:45 =  280.9/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9009 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   401 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  72097 in 00:04:15 =  283.1/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9010 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   403 Err:     0 (0.00%) Active: 110 Started: 110 Finished: 0
+summary =  81107 in 00:04:45 =  285.0/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   9009 in 00:00:30 =  300.3/s Avg:   211 Min:   106 Max:   400 Err:     0 (0.00%) Active: 458 Started: 458 Finished: 0
+summary =  90116 in 00:05:15 =  286.4/s Avg:   210 Min:   106 Max: 10950 Err:     0 (0.00%)
+summary +   6474 in 00:01:00 =  107.9/s Avg:  2588 Min:     6 Max: 61046 Err:  1500 (23.17%) Active: 6110 Started: 6110 Finished: 0
+summary =  96590 in 00:06:15 =  257.8/s Avg:   370 Min:     6 Max: 61046 Err:  1500 (1.55%)
+summary +   5077 in 00:00:30 =  169.3/s Avg: 42458 Min:     7 Max: 73755 Err:  3492 (68.78%) Active: 6110 Started: 6110 Finished: 0
+summary = 101667 in 00:06:45 =  251.3/s Avg:  2471 Min:     6 Max: 73755 Err:  4992 (4.91%)
+summary +  12263 in 00:00:30 =  408.8/s Avg:  7080 Min:     6 Max: 90129 Err: 12109 (98.74%) Active: 6110 Started: 6110 Finished: 0
+summary = 113930 in 00:07:15 =  262.1/s Avg:  2967 Min:     6 Max: 90129 Err: 17101 (15.01%)
+summary +   4989 in 00:00:31 =  161.9/s Avg: 21924 Min:   107 Max: 90096 Err:  1757 (35.22%) Active: 6110 Started: 6110 Finished: 0
+summary = 118919 in 00:07:45 =  255.5/s Avg:  3763 Min:     6 Max: 90129 Err: 18858 (15.86%)
+summary +   3345 in 00:00:29 =  114.6/s Avg:  1372 Min:     6 Max: 61027 Err:  3328 (99.49%) Active: 6110 Started: 6110 Finished: 0
+summary = 122264 in 00:08:15 =  247.2/s Avg:  3697 Min:     6 Max: 90129 Err: 22186 (18.15%)
+summary +   2112 in 00:00:30 =   69.9/s Avg: 57132 Min:   108 Max: 72126 Err:  1960 (92.80%) Active: 6110 Started: 6110 Finished: 0
+summary = 124376 in 00:08:45 =  237.0/s Avg:  4605 Min:     6 Max: 90129 Err: 24146 (19.41%)
+summary +   9032 in 00:00:30 =  303.2/s Avg: 21140 Min:     6 Max: 90384 Err:  9031 (99.99%) Active: 5852 Started: 6110 Finished: 258
+summary = 133408 in 00:09:15 =  240.5/s Avg:  5724 Min:     6 Max: 90384 Err: 33177 (24.87%)
+summary +   2025 in 00:00:30 =   66.9/s Avg: 53780 Min:     6 Max: 90745 Err:  1815 (89.63%) Active: 5825 Started: 6110 Finished: 285
+summary = 135433 in 00:09:45 =  231.6/s Avg:  6443 Min:     6 Max: 90745 Err: 34992 (25.84%)
+summary +   4575 in 00:00:30 =  152.5/s Avg:  4188 Min:     6 Max: 90096 Err:  4569 (99.87%) Active: 2977 Started: 6110 Finished: 3133
+summary = 140008 in 00:10:15 =  227.7/s Avg:  6369 Min:     6 Max: 90745 Err: 39561 (28.26%)
+summary +   2018 in 00:00:31 =   65.0/s Avg: 63800 Min: 30000 Max: 91595 Err:  1957 (96.98%) Active: 959 Started: 6110 Finished: 5151
+summary = 142026 in 00:10:46 =  219.9/s Avg:  7185 Min:     6 Max: 91595 Err: 41518 (29.23%)
+summary +     20 in 00:00:29 =    0.7/s Avg: 62633 Min: 61008 Max: 90044 Err:    20 (100.00%) Active: 938 Started: 6110 Finished: 5172
+summary = 142046 in 00:11:15 =  210.5/s Avg:  7193 Min:     6 Max: 91595 Err: 41538 (29.24%)
+summary +    938 in 00:00:03 =  283.3/s Avg: 90375 Min: 90006 Max: 91354 Err:   938 (100.00%) Active: 0 Started: 6110 Finished: 6110
+summary = 142984 in 00:11:18 =  210.8/s Avg:  7738 Min:     6 Max: 91595 Err: 42476 (29.71%)
