@@ -1,3 +1,4 @@
+index=wso2 source=prd_wso2_usage_logs host=xyz earliest=-24h
 | eval lat = tonumber(usg_rsp_time_ms)
 | eval lat_bucket = case(
     lat >= 0 AND lat < 100, "0-100ms",
@@ -7,4 +8,10 @@
     lat >= 1000, ">=1sec",
     true(), "unknown"
   )
-| timechart span=1h count by lat_bucket limit=0
+| bin _time span=1h
+| stats count as total count(eval(lat_bucket="0-100ms")) as "0-100ms" count(eval(lat_bucket="100-300ms")) as "100-300ms" count(eval(lat_bucket="300-500ms")) as "300-500ms" count(eval(lat_bucket="500ms-1sec")) as "500ms-1sec" count(eval(lat_bucket=">=1sec")) as ">=1sec" by _time
+| eval "0-100ms%" = round(('0-100ms'/total)*100,1)
+| eval "100-300ms%" = round(('100-300ms'/total)*100,1)
+| eval "300-500ms%" = round(('300-500ms'/total)*100,1)
+| eval "500ms-1sec%" = round(('500ms-1sec'/total)*100,1)
+| eval ">=1sec%" = round(('>=1sec'/total)*100,1)
