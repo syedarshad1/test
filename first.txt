@@ -1,1 +1,64 @@
-2450Osa5iqHrJyUx0-53O8LA==mfC01k5sPRrJHikztbbBLFKlgGBv0fhAvUREwCzEpmyv3gozAC2BDVXpw89Lb+VoTVfNKiW/ysR90AGNzYT467jQZVad12oqIKkiGhgBbAyxj4QJCJhuimYia7r2JYx0ECv8yVtfNFIYCJHQqcbvYVpLmBQOQ5V15e9ft3nrVff9hmdUETa9SnzbF+1E9ox8LlAgSTGLAIUqBx2vvnkfogceyZ/AdHd1uC7kbXIpegJ34BhgRYFrl+kolIdvN3xwGTlseaAJo/3NTrzIXLGIxRgdUJRe1FiQ3aN2O8shA7htF1vA8WsV0oXZ9zMI+Sx7Nnc1cRpalX/0PZWqrihUCHUSDPUtzG6ZV3b4H3JYVkta2hKTIORWJWp9kq8Ij7UfyP+/WvPMCsSij3t38NFX/KCquXFBxQ2fRS/48ny+J1DgZ/W/suzmVWHOk492cG3xmA9lbz+7Kl9NdwadThFiehoadQHdaV9X7ZMhEBIPC+XTOQDsdb/bsul4OS+4j7zqiJHcfNHBAa1a1RsZmQ1n3K6EfVzxiruCVqAZItfY6wQA6BXJAqBaMRlF/QnU7qFqf+cNyaKIV6kzkyK4JCzJ/3XtUKQzw1mnUc1dM8xqKOnsFDr3+puxDz85OuoRinwYuZNpv7GRRiGAYY3CVtkqAP9k3Jj6crOHn4bjLvV6uLQmX3QOQxrdlj3rE0EuU8V30SjkXE6o/HQhgzXzDN0CZ2xX1wylckwvb7RdqrrE9OLHGA4n6k8TlA5oS/hN4vkufkqbeqalVxMNELjKJivQ9h66uCfx/vTwbazEqpa6J1iQsYC39Bxm8HSSjGnEj1VT0+psEpPMu+lTtdESiMP8uXdfM9i7a+qtkwvC/G4ih3ysdfnVp/coGadH5N4c+P9SreDo37vOrvk0L5kCkmpegEsYiDNjvnAZuxCn/3xe/ZtBUoY7zzeA/JWQ4kt2Fq/IxTFxD+j1EKfFQT2v92AbpWK4RtL2u+maI9TkpDjh1AVZU1oYzEwONlOPPIxkMfblB+AWDJSPBMG80rOoYFM+mUvUNIbx/Umo8OirkDZqiL0JiW5DBRoFIJmBcQ67Uj2FpDbNiIL22EcmSl9pM7HM8pV/znPFowwz37EUUkCnmuyyl4EDnzhvAiHgMF7ZJZWkIB9FPx+7faQAS+3NkQvzDRMC1Xr0/t4DLp9i6cOOhSLx90nsg/EfO32Ns5Wj+h9lL2Eqg5jztyuK5IVqWgfOX2mhsCFyWyeb11Nr3DqiD34l1WPmqmwS6f29nmlwZqIiXowtZLnygXFvK2B0BUAkXUT6z2cPHPVZFUcWBSz/b0r304gGiRQw4TokZROdaO4cNINqUM/hkR2EF0fdmzS6eX0xOt6NMZpXCUlqtmotJ20SPmnxafKYFtwmTde3K3XmirwCfHk22PIKkPeZK2iMR8dzKIYbyLCTehoxabJ60GUQ1fNH8aYAI1ZkbmVeyS/GLz2Uqx0vbV0w2zooTjMzTNovejdwkQTlB01LNoot0iBsfjQnGU1SbAA6eUzb2C7dcO9cV44Xd6v3KZpntt7Uj0jZJraeGFBr2sLIH2ySPGxjKi8FRpHflV39YCN71Q9umJz2zsJ49FwH3pq0X3W/UdRK5mcXALGJ+9O+2BPBMsISaLUttWDOv4dWnRVMZ0hJZ+6q59TLX4pWwcZGhOOYTKKcTa4qXEtFzn3qgdOcJWE=
++ date
++ start_time='Thu May 14 23:07:30 CDT 2026'
++ echo 'Start Time:  Thu May 14 23:07:30 CDT 2026'
+Start Time:  Thu May 14 23:07:30 CDT 2026
++ env=RDY
++ batchName=suspensionQueue
++ cd /ebs/sh/scripts
++ . /ebs/sh/scripts/common/setEnv.sh
++ . /ebs/sh/scripts/common/shSetJava.sh
++ cd /ebs/sh/scripts
++ java -version
+java version "1.8.0_471"
+Java(TM) SE Runtime Environment (build 1.8.0_471-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.471-b09, mixed mode)
++ [ 0 -gt 0 ]
++ [ 0 -gt 0 ]
++ . /ebs/sh/scripts/common/setOraclePath.sh
++ [ 0 -gt 0 ]
++ set -x
++ . /ebs/sh/scripts/common/setCert.sh SECURE
++ type=SECURE
++ [ -z SECURE ]
++ test SECURE '=' SECURE
++ trustStore=/ebs/sh/local_keys/cacerts
++ trustStorePassword=changeit
++ echo '-Djavax.net.ssl.trustStore=/ebs/sh/local_keys/cacerts' '-Djavax.net.ssl.trustStorePassword=changeit'
+-Djavax.net.ssl.trustStore=/ebs/sh/local_keys/cacerts -Djavax.net.ssl.trustStorePassword=changeit
++ echo 'Starting SH Suspension Processing'
+Starting SH Suspension Processing
++ . /ebs/sh/scripts/common/batchExecutor.sh suspensionQueue RDY
++ echo '==> Processing Batch Executor'
+==> Processing Batch Executor
++ [ -z '-Djavax.net.ssl.trustStore=/ebs/sh/local_keys/cacerts' '-Djavax.net.ssl.trustStorePassword=changeit' ]
++ java -d64 '-Djava.security.egd=file:/dev/./urandom' '-Dlog4j.configurationFile=/ebs/sh/scripts/properties/log4j2.xml' '-Djavax.ne\
+t.ssl.trustStore=/ebs/sh/local_keys/cacerts' '-Djavax.net.ssl.trustStorePassword=changeit' -cp /ebs/sh/scripts/properties:/oracle/i\
+nstantclient_18_5/ojdbc8.jar:/ebs/sh/lib/activation-1.1.jar:/ebs/sh/lib/cache-api-1.1.0.jar:/ebs/sh/lib/com.ibm.mq.allclient-9.4.0.\
+0.jar:/ebs/sh/lib/commons-collections4-4.4.jar:/ebs/sh/lib/commons-compress-1.27.1.jar:/ebs/sh/lib/commons-io-2.18.0.jar:/ebs/sh/li\
+b/commons-lang3-3.16.0.jar:/ebs/sh/lib/commons-math3-3.6.1.jar:/ebs/sh/lib/curvesapi-1.08.jar:/ebs/sh/lib/DKIMforJavaMail-1.0.jar:/\
+ebs/sh/lib/eas-core-api-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-async-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-batch-3.21.0-D-\
+SNAPSHOT.jar:/ebs/sh/lib/eas-core-framework-batch-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-helper-3.21.0-D-SNAPSHOT.jar:/ebs/sh/l\
+ib/eas-core-impl-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-io-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-mail-api-3.21.0-D-SNAPSHO\
+T.jar:/ebs/sh/lib/eas-core-mail-impl-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-security-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core\
+-smpp-api-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-template-3.21.0-D-SNAPSHOT.jar:/ebs/sh/lib/eas-core-xml-3.21.0-D-SNAPSHOT.jar:\
+/ebs/sh/lib/eas-fse-batch-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-business-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-common-async\
+-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-common-business-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-core-3.22.0-F-SNAPSHOT.jar:/eb\
+s/sh/lib/eas-fse-database-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-domain-3.22.0-F-SNAPSHOT.jar:/ebs/sh/lib/eas-fse-resources-3.22\
+.0-F-SNAPSHOT.jar:/ebs/sh/lib/ehcache-3.10.8.jar:/ebs/sh/lib/encoder-1.2.3.jar:/ebs/sh/lib/freemarker-2.3.34.jar:/ebs/sh/lib/istack\
+-commons-runtime-4.0.0.jar:/ebs/sh/lib/jakarta.activation-2.0.0.jar:/ebs/sh/lib/jakarta.xml.bind-api-3.0.0.jar:/ebs/sh/lib/javaee-a\
+pi-8.0.1.jar:/ebs/sh/lib/javax.mail-1.6.2.jar:/ebs/sh/lib/jaxb-core-3.0.0-M5.jar:/ebs/sh/lib/jaxb-runtime-3.0.0-M5.jar:/ebs/sh/lib/\
+log4j-1.2-api-2.24.3.jar:/ebs/sh/lib/log4j-api-2.24.3.jar:/ebs/sh/lib/log4j-core-2.24.3.jar:/ebs/sh/lib/log4j-slf4j-impl-2.24.0.jar\
+:/ebs/sh/lib/mvel2-2.5.2.Final.jar:/ebs/sh/lib/poi-5.4.1.jar:/ebs/sh/lib/poi-ooxml-5.4.1.jar:/ebs/sh/lib/poi-ooxml-lite-5.4.1.jar:/\
+ebs/sh/lib/slf4j-api-1.7.36.jar:/ebs/sh/lib/SparseBitSet-1.3.jar:/ebs/sh/lib/txw2-3.0.0-M5.jar:/ebs/sh/lib/xmlbeans-5.3.0.jar com/f\
+is/eas/core/batch/execution/executor/BatchExecutor fse.batch suspensionQueue RDY
+ INFO - Applcation Location is null
+ INFO - Applcation Environment is READINESS
+[[name=WhiteListingListener, type=listener], [name=databaseConfiguration, type=config], [name=WhiteListingClassListener, type=liste\
+ner], [name=messages, type=module], [name=secure, type=module], [name=property, type=module], [name=cache, type=module], [name=dbCo\
+nnection, type=module], [name=coreConfigLoader, type=config], [name=stat, type=module], [name=mapping-xml, type=module], [name=mapp\
+ing-status, type=module], [name=mapping, type=module], [name=dispatcher, type=module], [name=serviceApplication, type=module], [nam\
+e=concurrency, type=module], [name=smpp, type=module], [name=appDefaultConfiguration, type=config], [name=mail, type=module], [name\
+=http, type=module], [name=notification, type=module], [name=transformer, type=module]]
+ERROR - failure while initializing Core Application
+com.fis.eas.core.exception.AppException: NG21151:EncodeDecode: Error during decrypt: java.lang.IllegalArgumentException: Illegal ba\
+se64 character a
