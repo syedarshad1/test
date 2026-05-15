@@ -1,1 +1,237 @@
-/ebs/java/jdk1.8.0_471/bin/javap -c -p -cp /ebs/sh/lib/eas-core-security-3.21.0-D-SNAPSHOT.jar com.fis.eas.core.security.cipher.EncodeDecode
+Compiled from "EncodeDecode.java"
+public class com.fis.eas.core.security.cipher.EncodeDecode {
+  private javax.crypto.spec.SecretKeySpec secretKeySpec;
+
+  private java.lang.String cipherAlgo;
+
+  public com.fis.eas.core.security.cipher.EncodeDecode();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void init(java.io.InputStream) throws com.fis.eas.core.exception.AppException;
+    Code:
+       0: new           #2                  // class java/util/Properties
+       3: dup
+       4: invokespecial #3                  // Method java/util/Properties."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: aload_1
+      10: invokevirtual #4                  // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+      13: aload_0
+      14: aload_2
+      15: ldc           #5                  // String cipher-algorithm
+      17: invokevirtual #6                  // Method java/util/Properties.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      20: putfield      #7                  // Field cipherAlgo:Ljava/lang/String;
+      23: aload_2
+      24: ldc           #8                  // String secret-key
+      26: invokevirtual #6                  // Method java/util/Properties.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      29: astore_3
+      30: aload_2
+      31: ldc           #9                  // String salt
+      33: invokevirtual #6                  // Method java/util/Properties.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      36: astore        4
+      38: aload_2
+      39: ldc           #10                 // String algorithm
+      41: invokevirtual #6                  // Method java/util/Properties.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      44: astore        5
+      46: aload_2
+      47: ldc           #11                 // String digest
+      49: invokevirtual #6                  // Method java/util/Properties.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      52: astore        6
+      54: aload         6
+      56: invokestatic  #12                 // Method javax/crypto/SecretKeyFactory.getInstance:(Ljava/lang/String;)Ljavax/crypto/SecretKeyFactory;
+      59: astore        7
+      61: new           #13                 // class javax/crypto/spec/PBEKeySpec
+      64: dup
+      65: aload_3
+      66: invokevirtual #14                 // Method java/lang/String.toCharArray:()[C
+      69: aload         4
+      71: invokevirtual #15                 // Method java/lang/String.getBytes:()[B
+      74: ldc           #16                 // int 200001
+      76: sipush        128
+      79: invokespecial #17                 // Method javax/crypto/spec/PBEKeySpec."<init>":([C[BII)V
+      82: astore        8
+      84: aload         7
+      86: aload         8
+      88: invokevirtual #18                 // Method javax/crypto/SecretKeyFactory.generateSecret:(Ljava/security/spec/KeySpec;)Ljavax/crypto/SecretKey;
+      91: astore        9
+      93: aload_0
+      94: new           #19                 // class javax/crypto/spec/SecretKeySpec
+      97: dup
+      98: aload         9
+     100: invokeinterface #20,  1           // InterfaceMethod javax/crypto/SecretKey.getEncoded:()[B
+     105: aload         5
+     107: invokespecial #21                 // Method javax/crypto/spec/SecretKeySpec."<init>":([BLjava/lang/String;)V
+     110: putfield      #22                 // Field secretKeySpec:Ljavax/crypto/spec/SecretKeySpec;
+     113: goto          129
+     116: astore_2
+     117: new           #24                 // class com/fis/eas/core/exception/AppException
+     120: dup
+     121: getstatic     #25                 // Field com/fis/eas/core/security/message/SecurityMessageCodes.NG21152_ERROR_LOADING_SECURITY_FILE:Lcom/fis/eas/core/security/message/SecurityMessageCodes;
+     124: aload_2
+     125: invokespecial #26                 // Method com/fis/eas/core/exception/AppException."<init>":(Lcom/fis/eas/core/error/ErrorMessageCode;Ljava/lang/Throwable;)V
+     128: athrow
+     129: return
+    Exception table:
+       from    to  target type
+           0   113   116   Class java/lang/Exception
+
+  public java.lang.String decrypt(java.lang.String) throws com.fis.eas.core.exception.AppException;
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: iconst_2
+       3: invokevirtual #27                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+       6: astore_2
+       7: aload_2
+       8: invokestatic  #28                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      11: istore_3
+      12: aload_1
+      13: iconst_2
+      14: iload_3
+      15: iconst_2
+      16: iadd
+      17: invokevirtual #27                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      20: astore        4
+      22: aload_1
+      23: iload_3
+      24: iconst_2
+      25: iadd
+      26: invokevirtual #29                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      29: astore        5
+      31: aload_0
+      32: getfield      #7                  // Field cipherAlgo:Ljava/lang/String;
+      35: invokestatic  #30                 // Method javax/crypto/Cipher.getInstance:(Ljava/lang/String;)Ljavax/crypto/Cipher;
+      38: astore        6
+      40: new           #31                 // class javax/crypto/spec/IvParameterSpec
+      43: dup
+      44: invokestatic  #32                 // Method java/util/Base64.getUrlDecoder:()Ljava/util/Base64$Decoder;
+      47: aload         4
+      49: invokevirtual #33                 // Method java/util/Base64$Decoder.decode:(Ljava/lang/String;)[B
+      52: invokespecial #34                 // Method javax/crypto/spec/IvParameterSpec."<init>":([B)V
+      55: astore        7
+      57: aload         6
+      59: iconst_2
+      60: aload_0
+      61: getfield      #22                 // Field secretKeySpec:Ljavax/crypto/spec/SecretKeySpec;
+      64: aload         7
+      66: invokevirtual #36                 // Method javax/crypto/Cipher.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+      69: new           #37                 // class java/lang/String
+      72: dup
+      73: aload         6
+      75: invokestatic  #38                 // Method java/util/Base64.getDecoder:()Ljava/util/Base64$Decoder;
+      78: aload         5
+      80: invokevirtual #33                 // Method java/util/Base64$Decoder.decode:(Ljava/lang/String;)[B
+      83: invokevirtual #39                 // Method javax/crypto/Cipher.doFinal:([B)[B
+      86: invokespecial #40                 // Method java/lang/String."<init>":([B)V
+      89: areturn
+      90: astore_2
+      91: new           #24                 // class com/fis/eas/core/exception/AppException
+      94: dup
+      95: getstatic     #41                 // Field com/fis/eas/core/security/message/SecurityMessageCodes.NG21151_ERROR_ENCRYPTION_DECODING:Lcom/fis/eas/core/security/message/SecurityMessageCodes;
+      98: aload_2
+      99: invokespecial #26                 // Method com/fis/eas/core/exception/AppException."<init>":(Lcom/fis/eas/core/error/ErrorMessageCode;Ljava/lang/Throwable;)V
+     102: athrow
+    Exception table:
+       from    to  target type
+           0    89    90   Class java/lang/Exception
+
+  public java.lang.String encrypt(java.lang.String) throws com.fis.eas.core.exception.AppException;
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: iconst_0
+       3: istore_3
+       4: bipush        16
+       6: newarray       byte
+       8: astore        4
+      10: ldc           #42                 // String SHA1PRNG
+      12: invokestatic  #43                 // Method java/security/SecureRandom.getInstance:(Ljava/lang/String;)Ljava/security/SecureRandom;
+      15: astore        5
+      17: iconst_0
+      18: istore        6
+      20: iload         6
+      22: bipush        10
+      24: if_icmple     38
+      27: new           #24                 // class com/fis/eas/core/exception/AppException
+      30: dup
+      31: getstatic     #44                 // Field com/fis/eas/core/security/message/SecurityMessageCodes.NG21153_ERROR_ASSIGNING_VALUE_IV:Lcom/fis/eas/core/security/message/SecurityMessageCodes;
+      34: invokespecial #45                 // Method com/fis/eas/core/exception/AppException."<init>":(Lcom/fis/eas/core/error/ErrorMessageCode;)V
+      37: athrow
+      38: aload         5
+      40: aload         4
+      42: invokevirtual #46                 // Method java/security/SecureRandom.nextBytes:([B)V
+      45: invokestatic  #47                 // Method java/util/Base64.getUrlEncoder:()Ljava/util/Base64$Encoder;
+      48: aload         4
+      50: invokevirtual #48                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+      53: astore_2
+      54: aload_2
+      55: invokevirtual #49                 // Method java/lang/String.length:()I
+      58: istore_3
+      59: iinc          6, 1
+      62: iload_3
+      63: ifle          20
+      66: iload_3
+      67: bipush        99
+      69: if_icmpgt     20
+      72: new           #50                 // class java/lang/StringBuilder
+      75: dup
+      76: invokespecial #51                 // Method java/lang/StringBuilder."<init>":()V
+      79: astore        7
+      81: iload_3
+      82: bipush        10
+      84: if_icmpge     95
+      87: aload         7
+      89: ldc           #52                 // String 0
+      91: invokevirtual #53                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: pop
+      95: aload         7
+      97: iload_3
+      98: invokevirtual #54                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     101: pop
+     102: aload         7
+     104: aload_2
+     105: invokevirtual #53                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     108: pop
+     109: new           #31                 // class javax/crypto/spec/IvParameterSpec
+     112: dup
+     113: aload         4
+     115: invokespecial #34                 // Method javax/crypto/spec/IvParameterSpec."<init>":([B)V
+     118: astore        8
+     120: aload_0
+     121: getfield      #7                  // Field cipherAlgo:Ljava/lang/String;
+     124: invokestatic  #30                 // Method javax/crypto/Cipher.getInstance:(Ljava/lang/String;)Ljavax/crypto/Cipher;
+     127: astore        9
+     129: aload         9
+     131: iconst_1
+     132: aload_0
+     133: getfield      #22                 // Field secretKeySpec:Ljavax/crypto/spec/SecretKeySpec;
+     136: aload         8
+     138: invokevirtual #36                 // Method javax/crypto/Cipher.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+     141: aload         9
+     143: aload_1
+     144: ldc           #55                 // String UTF-8
+     146: invokevirtual #56                 // Method java/lang/String.getBytes:(Ljava/lang/String;)[B
+     149: invokevirtual #39                 // Method javax/crypto/Cipher.doFinal:([B)[B
+     152: astore        10
+     154: aload         7
+     156: invokestatic  #57                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     159: aload         10
+     161: invokevirtual #48                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     164: invokevirtual #53                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     167: pop
+     168: aload         7
+     170: invokevirtual #58                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     173: areturn
+     174: astore        4
+     176: new           #24                 // class com/fis/eas/core/exception/AppException
+     179: dup
+     180: getstatic     #59                 // Field com/fis/eas/core/security/message/SecurityMessageCodes.NG21150_ERROR_ENCRYPTION_ENCODING:Lcom/fis/eas/core/security/message/SecurityMessageCodes;
+     183: aload         4
+     185: invokespecial #26                 // Method com/fis/eas/core/exception/AppException."<init>":(Lcom/fis/eas/core/error/ErrorMessageCode;Ljava/lang/Throwable;)V
+     188: athrow
+    Exception table:
+       from    to  target type
+           4   173   174   Class java/lang/Exception
