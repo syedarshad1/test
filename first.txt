@@ -1,7 +1,9 @@
-# Check TIME_WAIT sockets per IMSE process
-for pid in 23217 28970 35871; do
-  region=$(ps aux | grep " $pid " | grep -o "IMSE[0-9]*" | head -1)
-  tw=$(lsof -p $pid 2>/dev/null | grep -i "TIME_WAIT" | wc -l)
-  est=$(lsof -p $pid 2>/dev/null | grep -i "ESTABLISHED" | wc -l)
-  printf "%-10s (PID %5d): TIME_WAIT=%6d  ESTABLISHED=%6d\n" "$region" "$pid" "$tw" "$est"
-done
+$ for pid in 23217 28970 35871; do
+>   region=$(ps aux | grep " $pid " | grep -o "IMSE[0-9]*" | head -1)
+>   tw=$(lsof -p $pid 2>/dev/null | grep -i "TIME_WAIT" | wc -l)
+>   est=$(lsof -p $pid 2>/dev/null | grep -i "ESTABLISHED" | wc -l)
+>   printf "%-10s (PID %5d): TIME_WAIT=%6d  ESTABLISHED=%6d\n" "$region" "$pid" "$tw" "$est"
+> done
+IMSE2      (PID 23217): TIME_WAIT=     0  ESTABLISHED=     0
+IMSE       (PID 28970): TIME_WAIT=     0  ESTABLISHED=     0
+IMSE3      (PID 35871): TIME_WAIT=     0  ESTABLISHED=     0
