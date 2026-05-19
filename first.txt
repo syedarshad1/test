@@ -1,22 +1,76 @@
-# Login to ih-prd-imse.prod.local
-ssh user@ih-prd-imse.prod.local
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ telnet 10.20.65.35 10001
+Trying 10.20.65.35...
+Connected to 10.20.65.35.
+Escape character is '^]'.
+^C^C^C^C^C^C^CConnection closed by foreign host.
 
-# 1. Check total TIME_WAIT socket count
-netstat -an | grep TIME_WAIT | wc -l
-# or
-ss -an | grep TIME_WAIT | wc -l
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$
 
-# Expected: if > 5,000, you've found the smoking gun.
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ netstat -an | grep TIME_WAIT | wc -l
+32383
 
-# 2. Check ephemeral port availability
-ss -tan | grep ESTAB | wc -l    # Active connections
-ss -tan | grep TIME_WAIT | wc -l  # Zombie connections
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -an | grep TIME_WAIT | wc -1
+wc: invalid option -- '1'
+Try 'wc --help' for more information.
 
-# 3. See the actual kernel limit
-cat /proc/sys/net/ipv4/ip_local_port_range
-# Typical: 32768 65535  (28,767 ports available)
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -an | grep TIME_WAIT | wc -l
+0
 
-# 4. Check netstat distribution
-netstat -an | awk '{print $6}' | sort | uniq -c | sort -rn
-# or
-ss -an | awk '{print $2}' | sort | uniq -c | sort -rn
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -tan | grep ESTAB | wc -l
+11835
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -tan | grep TIME_WAIT | wc -l
+0
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -tan | grep TIME_WAIT | wc -l
+0
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ cat /proc/sys/net/ipv4/ip_local_port_range
+57000   65000
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ netstat -an | awk '{print $6}' | sort | uniq -c | sort -rn
+  32712 TIME_WAIT
+  11852 ESTABLISHED
+    328 LISTEN
+    277 CONNECTED
+     69
+     55 STREAM
+      9 SYN_SENT
+      2 SEQPACKET
+      2 established)
+      2 CLOSE_WAIT
+      1 I-Node
+      1 Foreign
+      1 DCID
+      1 CLOSING
+      1 and
+      1 42883404
+      1 42862450
+      1 42785
+      1 37787315
+      1 32966552
+      1 31561
+      1 25889
+      1 20328498
+      1 19797
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$ ss -an | awk '{print $2}' | sort | uniq -c | sort -rn
+  34447 TIME-WAIT
+  12137 ESTAB
+    385 LISTEN
+    131 UNCONN
+     14 SYN-SENT
+      1 State
+      1 CLOSING
+      1 CLOSE-WAIT
