@@ -1,7 +1,15 @@
-# Step 1: Show all sockets for IMSE (PID 28970)
-echo "=== IMSE (PID 28970) ===" 
-grep "" /proc/net/tcp | awk '{print $10}' | while read inode; do
+# For IMSE (PID 28970): Count TIME_WAIT and ESTABLISHED
+echo "=== IMSE (PID 28970) ==="
+grep "" /proc/net/tcp | while read line; do
+  inode=$(echo "$line" | awk '{print $10}')
+  state=$(echo "$line" | awk '{print $4}')
+  
+  # Check if this inode belongs to PID 28970
   if ls -l /proc/28970/fd/* 2>/dev/null | grep -q "socket:\[$inode\]"; then
-    echo "$inode"
+    if [ "$state" = "04" ]; then
+      echo "TIME_WAIT"
+    elif [ "$state" = "01" ]; then
+      echo "ESTABLISHED"
+    fi
   fi
-done | wc -l
+done | sort | uniq -c
