@@ -1,3 +1,21 @@
-sudo netstat -anp 2>/dev/null | grep "10.20.65.35:10001" | awk '{print $7}' | sort | uniq -c | sort -rn
-
-netstat -an | grep "10.20.65.35:10001" | awk '{print $4}' | cut -d: -f2 | sort -n | tail -20
+$ netstat -an | grep "10.20.65.35:10001" | awk '{print $4}' | cut -d: -f2 | sort -n | tail -20
+64975
+64976
+64978
+64980
+64981
+64982
+64983
+64984
+64985
+64986
+64987
+64988
+64989
+64990
+64992
+64994
+64995
+64996
+64998
+65000
