@@ -1,1 +1,8 @@
-netstat -an | grep "10.20.65.35:10001" | grep "SYN_SENT" | wc -l
+$ netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
+      2 ESTABLISHED
+   6379 TIME_WAIT
+
+e3016834@bdc1rctoihws113 [/home/e3016834]
+$  netstat -an | grep "10.20.65.33:10001" | awk '{print $6}' | sort | uniq -c
+      1 ESTABLISHED
+   2312 TIME_WAIT
