@@ -1,2 +1,7 @@
-$ cat /proc/sys/net/ipv4/ip_local_port_range
-57000   65000
+$ ss -an | awk '{print $2}' | sort | uniq -c | sort -rn                                                                                       28478 TIME-WAIT
+  12062 ESTAB
+    379 LISTEN
+    128 UNCONN
+      2 SYN-SENT
+      2 CLOSE-WAIT
+      1 State
