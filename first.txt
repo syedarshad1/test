@@ -1,15 +1,22 @@
+# Login to ih-prd-imse.prod.local
+ssh user@ih-prd-imse.prod.local
 
+# 1. Check total TIME_WAIT socket count
+netstat -an | grep TIME_WAIT | wc -l
+# or
+ss -an | grep TIME_WAIT | wc -l
 
-Flow
+# Expected: if > 5,000, you've found the smoking gun.
 
-FrontApp->Middlelayer->Mainframe
+# 2. Check ephemeral port availability
+ss -tan | grep ESTAB | wc -l    # Active connections
+ss -tan | grep TIME_WAIT | wc -l  # Zombie connections
 
-App-> MB Broker(1st hop) ih-prd.prod.local->  MB Broker(2nd hop) ih-prd-imse.prod.local-> MainFrame(IMS)10.20.65.35:10001
+# 3. See the actual kernel limit
+cat /proc/sys/net/ipv4/ip_local_port_range
+# Typical: 32768 65535  (28,767 ports available)
 
-When posting from MB Broker 2nd Hop to Mainframe(IMS) it is failing, so its source server or mainframe sending the response back
-
-IOException 1:  Cannot assign requested address (Address not available)
-
-MsgRqContent=<MtvnSvcReq xmlns="mtvnCWMtvnSvcReq"><MtvnSvcVer>1.0</MtvnSvcVer><MsgUUID>ffefb6ca-e569-4346-acee-04607d7515aa</MsgUUID><PrcsParms><SrcID>I3FLX0</SrcID></PrcsParms><Svc><SvcParms><ApplID>CI</ApplID><SvcId>CICIBAcctPrfl</SvcId><SvcVer>1.0</SvcVer><RoutingID>524</RoutingID></SvcParms><Security><BasicAuth><UsrID>D524F95</UsrID><Pwd>T5@***</Pwd></BasicAuth></Security><MsgData><CICIBAcctPrflReqData xmlns="mtvnCWCICIBAcctPrflReqData"><E16054>CIB</E16054><E16055>22251929</E16055></CICIBAcctPrflReqData></MsgData></Svc></MtvnSvcReq>|MsgRsContent=<?xml version="1.0" encoding="UTF-8"?><MtvnSvcRes xmlns="mtvnCWSvcRes"><MtvnSvcVer>1.0</MtvnSvcVer><MsgUUID>ffefb6ca-e569-4346-acee-04607d7515aa</MsgUUID><Svc><SvcParms><ApplID>CI</ApplID><SvcID>CICIBAcctPrfl</SvcID><SvcVer>1.0</SvcVer></SvcParms><MsgData><CICIBAcctPrflResData xmlns="mtvnCWCICIBAcctPrflResData"><E16054>CIB</E16054><E16055>22251929</E16055><E9000>0</E9000><E309>N</E309><CIBAcctRelatedDataLst></CIBAcctRelatedDataLst><ErrCde>-1</ErrCde><ErrResnCde>10003</ErrResnCde><ApplMsgLst><ApplMsg><ApplMsgApplId>MB</ApplMsgApplId><ApplMsgNbr>10003</ApplMsgNbr><ApplMsgTxt>(IMSE)     IOException 1:  Cannot assign requested address (Address not available)</ApplMsgTxt><ApplMsgErrInd>Y</ApplMsgErrInd></ApplMsg></ApplMsgLst></CICIBAcctPrflResData></MsgData><ErrCde>-1</ErrCde></Svc><ErrCde>0</ErrCde></MtvnSvcRes>|OutboundUrl=https://ih-prd-imse.prod.local/mbSvr/MtvnSvcReq
-
-https://ih-prd-imse.prod.local/mbSvr/MtvnSvcReq
+# 4. Check netstat distribution
+netstat -an | awk '{print $6}' | sort | uniq -c | sort -rn
+# or
+ss -an | awk '{print $2}' | sort | uniq -c | sort -rn
