@@ -1,5 +1,1 @@
-I did little more research here
-
-
-
-1 source port eg:57001 can established multiple connection different IP and Port
+I did a little more research here: 1 source port (e.g., 57001) can establish multiple connections to different destination IPs and ports.
