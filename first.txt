@@ -1,1 +1,1 @@
-cat /opt/WebSphere/9/AppServerBase1/profiles/AppServerBase1/servers/MBCS_MBSvr_IMSE_Prd_bdc1rctoihws113/server.xml | grep -A 20 "httpOptions\|connectionPool\|TCPChannel" | head -40
+tail -100 /mbcs/mbsvr/Production/logs/WAS9/IMSE/MBCS_MBSvr_IMSE_Prd_bdc1rctoihws113/*.log | grep -i "connection\|socket\|pool"
