@@ -1,1 +1,1 @@
-tail -100 /mbcs/mbsvr/Production/logs/WAS9/IMSE/MBCS_MBSvr_IMSE_Prd_bdc1rctoihws113/*.log | grep -i "connection\|socket\|pool"
+cat /proc/sys/net/ipv4/ip_local_port_range
