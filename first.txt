@@ -1,9 +1,6 @@
-$ for pid in 23217 28970 35871; do
->   region=$(ps aux | grep " $pid " | grep -o "IMSE[0-9]*" | head -1)
->   tw=$(lsof -p $pid 2>/dev/null | grep -i "TIME_WAIT" | wc -l)
->   est=$(lsof -p $pid 2>/dev/null | grep -i "ESTABLISHED" | wc -l)
->   printf "%-10s (PID %5d): TIME_WAIT=%6d  ESTABLISHED=%6d\n" "$region" "$pid" "$tw" "$est"
-> done
-IMSE2      (PID 23217): TIME_WAIT=     0  ESTABLISHED=     0
-IMSE       (PID 28970): TIME_WAIT=     0  ESTABLISHED=     0
-IMSE3      (PID 35871): TIME_WAIT=     0  ESTABLISHED=     0
+# Show all TIME_WAIT destinations
+netstat -an | grep TIME_WAIT | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
+
+# This will show: "destination IP: count"
+# If 10.20.65.35 appears, those are Mainframe connections
+# If not, they're connecting elsewhere
