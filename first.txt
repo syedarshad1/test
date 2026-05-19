@@ -1,7 +1,5 @@
-$ ss -an | awk '{print $2}' | sort | uniq -c | sort -rn                                                                                       28478 TIME-WAIT
-  12062 ESTAB
-    379 LISTEN
-    128 UNCONN
-      2 SYN-SENT
-      2 CLOSE-WAIT
-      1 State
+I did little more research here
+
+
+
+1 source port eg:57001 can established multiple connection different IP and Port
