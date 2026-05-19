@@ -1,8 +1,1 @@
-$ for pid in 23217 28970 35871; do
->   region=$(ps aux | grep " $pid " | grep -o "IMSE[0-9]*" | head -1)
->   count=$(ls -1 /proc/$pid/fd 2>/dev/null | wc -l)
->   echo "$region (PID $pid): $count file descriptors"
-> done
-IMSE2 (PID 23217): 0 file descriptors
-IMSE (PID 28970): 0 file descriptors
-IMSE3 (PID 35871): 0 file descriptors
+netstat -an | grep "10.20.65.35:10001" | grep "SYN_SENT" | wc -l
