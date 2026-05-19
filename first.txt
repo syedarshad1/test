@@ -1,1 +1,5 @@
-ps aux | grep java | grep -v grep | awk '{print $2, $0}' | grep -o "^[0-9]* .* IMSE[0-9]*" | sort
+for pid in 23217 28970 35871; do
+  region=$(ps aux | grep " $pid " | grep -o "IMSE[0-9]*" | head -1)
+  count=$(ls -1 /proc/$pid/fd 2>/dev/null | wc -l)
+  echo "$region (PID $pid): $count file descriptors"
+done
