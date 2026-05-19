@@ -1,4 +1,1 @@
-$ netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
-      5 ESTABLISHED
-      3 SYN_SENT
-   5872 TIME_WAIT
+ps aux | grep java | grep -v grep | awk '{print $2, $0}' | grep -o "^[0-9]* .* IMSE[0-9]*" | sort
