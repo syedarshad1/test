@@ -1,6 +1,21 @@
-# Show all TIME_WAIT destinations
-netstat -an | grep TIME_WAIT | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
-
-# This will show: "destination IP: count"
-# If 10.20.65.35 appears, those are Mainframe connections
-# If not, they're connecting elsewhere
+$ netstat -an | grep TIME_WAIT | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
+   6601 10.20.65.35
+   4114 10.30.64.33
+   3099 10.20.65.33
+   2613 10.30.64.35
+   1919 10.30.64.32
+   1839 10.20.65.32
+   1799 10.20.65.36
+   1718 10.30.64.31
+   1621 10.30.64.30
+   1336 10.30.64.36
+   1087 10.30.64.38
+    825 156.55.82.223
+    735 10.30.64.34
+    496 10.30.64.37
+    451 10.236.255.55
+    252 156.55.82.217
+    166 10.30.64.39
+    126 10.236.255.53
+     47 10.20.65.31
+     27 10.0.13.1
