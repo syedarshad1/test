@@ -1,6 +1,1 @@
-$ netstat -an | grep "10.20.65.35:10001" | awk '{print $4}' | cut -d: -f2 | sort -n | uniq -c | tail -5
-      1 64994
-      1 64996
-      1 64997
-      1 64998
-      1 65000
+netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
