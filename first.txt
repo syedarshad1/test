@@ -1,1 +1,1 @@
-lsof -p 28970 2>/dev/null | grep -i "TIME_WAIT\|ESTABLISHED" | wc -l
+netstat -an | grep "10.20.65.35:10001" | awk '{print $4}' | cut -d: -f2 | sort -n | uniq -c | tail -5
