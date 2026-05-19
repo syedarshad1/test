@@ -1,8 +1,1 @@
-$ netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
-      2 ESTABLISHED
-   6379 TIME_WAIT
-
-e3016834@bdc1rctoihws113 [/home/e3016834]
-$  netstat -an | grep "10.20.65.33:10001" | awk '{print $6}' | sort | uniq -c
-      1 ESTABLISHED
-   2312 TIME_WAIT
+cat /opt/WebSphere/9/AppServerBase1/profiles/AppServerBase1/servers/MBCS_MBSvr_IMSE_Prd_bdc1rctoihws113/server.xml | grep -A 20 "httpOptions\|connectionPool\|TCPChannel" | head -40
