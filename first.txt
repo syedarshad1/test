@@ -1,4 +1,4 @@
-$ netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
-     10 ESTABLISHED
-      4 SYN_SENT
-   7836 TIME_WAIT
+netstat -an | grep "TIME_WAIT\|ESTABLISHED\|SYN_SENT" | awk '{print $5}' | sort -u | while read dest; do
+  echo "=== $dest ==="
+  netstat -an | grep "$dest" | awk '{print $6}' | sort | uniq -c
+done
