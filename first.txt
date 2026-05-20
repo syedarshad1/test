@@ -1,3 +1,4 @@
-
-how many JVMs sit on that one server?  (sorry if im misunderstand, but my thoughts are that the host level pseudo ports would be available to all the JVMs/Regions on that particular host - does that mean we run all JVms on the same host?)
-
+$ netstat -an | grep "10.20.65.35:10001" | awk '{print $6}' | sort | uniq -c
+     10 ESTABLISHED
+      4 SYN_SENT
+   7836 TIME_WAIT
