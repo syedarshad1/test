@@ -1,4 +1,3 @@
-netstat -an | grep ":10001" | awk '{print $5}' | cut -d: -f1 | sort -u | while read ip; do
-  echo "=== $ip:10001 ==="
-  netstat -an | grep "$ip:10001" | awk '{print $6}' | sort | uniq -c
-done
+net.ipv4.ip_local_port_range = 49000 65000
+
+net.ipv4.ip_local_reserved_ports = 30000-56999
