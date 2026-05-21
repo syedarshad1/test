@@ -1,3 +1,16 @@
-net.ipv4.ip_local_port_range = 49000 65000
+If you keep those values:
+Actual usable ephemeral ports:
 
-net.ipv4.ip_local_reserved_ports = 30000-56999
+Reserved: 30000-56999 (blocked, cannot use)
+Port range: 49000-65000
+Overlap (blocked): 49000-56999
+Usable: 57000-65000 = 8,001 ports
+
+
+Result:
+You're wasting 8,000 ports (49000-56999) that are defined in the range but cannot actually be used because they're reserved.
+Your problem persists:
+
+Still only 8,001 usable ports
+Still get "Cannot assign requested address" errors
+Change has no positive effect
