@@ -1,36 +1,6 @@
-$ ./runDbTest.sh
-
-===============================================================
-   Oracle DB Test Runner
-   - No argument  → use ./tns.txt
-   - Absolute path → use as-is
-   - Filename      → use file from current directory
-===============================================================
-
-Using default tns.txt: /home/e3016834/tns.txt
-=== Oracle JDBC Diagnostic Tool ===
-Using file: /home/e3016834/tns.txt
-
-==================================================
-Entry 1 of 2
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to II_RDY_SVC
-Connected using SCAN host and IP: UNABLE_TO_QUERY and DNS_LOOKUP_FAILED
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Time taken: 1 sec (1504 ms)
-
-==================================================
-Entry 2 of 2
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to II_RDY_SVC
-Connected using SCAN host and IP: UNABLE_TO_QUERY and DNS_LOOKUP_FAILED
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Time taken: 0 sec (113 ms)
-
-=== Testing Complete ===
+SELECT
+  sys_context('USERENV','SERVICE_NAME')  AS service_name,
+  sys_context('USERENV','INSTANCE_NAME') AS instance_name,
+  sys_context('USERENV','SERVER_HOST')   AS server_host,
+  sys_context('USERENV','NETWORK_PROTOCOL') AS protocol
+FROM dual;
