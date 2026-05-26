@@ -1,7 +1,1 @@
-Enter username for MB_RDY_SVC: e3016834
-Enter password for MB_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to MB_RDY_SVC
-Connected using SCAN host and IP: p8x5vm02-1-scan.prod.local and 147.249.69.85
-Backend RAC node and IP: p1xlvdb4d-adm and DNS_LOOKUP_FAILED
-Time taken: 1 sec (1850 ms)
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p8x5vm02-1-scan.prod.local)(PORT=1721))(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
