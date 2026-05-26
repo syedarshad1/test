@@ -1,231 +1,47 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.Console;
-import java.util.*;
-import java.util.regex.*;
-import java.net.*;
+$ cat tns.txt
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p8x5vm02-1-scan.prod.local)(PORT=1721))(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
 
-public class OracleConnectionTest {
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(ADDRESS=(PROTOCOL=TCP)(HOST=p8x5vm02-1-scan.prod.local)(PORT=1721)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
 
-    private static final String GREEN  = "\u001B[32m";
-    private static final String RED    = "\u001B[31m";
-    private static final String YELLOW = "\u001B[33m";
-    private static final String CYAN   = "\u001B[36m";
-    private static final String RESET  = "\u001B[0m";
-    private static final String BOLD   = "\u001B[1m";
 
-    private static String extractServiceName(String jdbcUrl) {
-        Pattern p = Pattern.compile("service_name=([^\\)]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        return m.find() ? m.group(1).trim() : "UNKNOWN_SERVICE";
-    }
+Using default tns.txt: /home/e3016834/tns.txt
+=== Oracle JDBC Diagnostic Tool ===
+Using file: /home/e3016834/tns.txt
 
-    private static List<String> extractHosts(String jdbcUrl) {
-        List<String> hosts = new ArrayList<>();
-        Pattern p = Pattern.compile("host=([^\\)]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        while (m.find()) hosts.add(m.group(1).trim());
-        return hosts;
-    }
+==================================================
+Entry 1 of 2
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
+Attempting connection to: p8x5vm02-1-scan.prod.local
+✗ Connection failed for p8x5vm02-1-scan.prod.local
+ErrorCode: 17002 | SQLState: 08006
+Time taken: 16 sec
+Message: IO Error: The Network Adapter could not establish the connection (CONNECTION_ID=UkDXRzLNQTaX6Pf1+C/VWg==)
+Trying next SCAN host...
+Attempting connection to: p1xlvdb4-1-scan
+✗ Connection failed for p1xlvdb4-1-scan
+ErrorCode: 17002 | SQLState: 08006
+Time taken: 15 sec
+Message: IO Error: The Network Adapter could not establish the connection (CONNECTION_ID=raz8zmGuS8yKmF34kV6j9w==)
+Trying next SCAN host...
+RESULT: FAILURE
+Could not connect to any SCAN host:
+  - p8x5vm02-1-scan.prod.local
+  - p1xlvdb4-1-scan
 
-    private static String extractPort(String jdbcUrl) {
-        Pattern p = Pattern.compile("port=([0-9]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        return m.find() ? m.group(1) : "1521";
-    }
+==================================================
+Entry 2 of 2
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
+Attempting connection to: p1xlvdb4-1-scan
+✓ Successfully connected via: p1xlvdb4-1-scan
+RESULT: SUCCESS
+Connected successfully to MB_RDY_SVC
+Active SCAN host and IP: p1xlvdb4-1-scan and 10.236.191.56
+Backend RAC node and IP: p1xlvdb4d-adm and DNS_LOOKUP_FAILED
+Time taken: 0 sec (677 ms)
 
-    private static String extractServiceNameFull(String jdbcUrl) {
-        Pattern p = Pattern.compile("service_name=([^\\)]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        return m.find() ? m.group(1).trim() : "";
-    }
+=== Testing Complete ===
 
-    private static String buildSingleHostUrl(String host, String port, String serviceName) {
-        return "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" + 
-               host + ")(PORT=" + port + "))(CONNECT_DATA=(SERVICE_NAME=" + 
-               serviceName + ")))";
-    }
-
-    private static String resolveIP(String host) {
-        try {
-            InetAddress addr = InetAddress.getByName(host);
-            return addr.getHostAddress();
-        } catch (Exception e) {
-            return "DNS_LOOKUP_FAILED";
-        }
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(CYAN + "=== Oracle JDBC Diagnostic Tool ===" + RESET);
-
-        String tnsPath = (args.length > 0)
-                ? args[0]
-                : Paths.get("tns.txt").toAbsolutePath().toString();
-
-        System.out.println(CYAN + "Using file: " + tnsPath + RESET);
-
-        List<String> lines;
-
-        try {
-            lines = Files.readAllLines(Paths.get(tnsPath));
-        } catch (Exception e) {
-            System.out.println(RED + "FAILED: Unable to read " + tnsPath + RESET);
-            return;
-        }
-
-        lines.removeIf(line -> line.trim().isEmpty() || line.trim().startsWith("#"));
-
-        if (lines.isEmpty()) {
-            System.out.println(RED + "No JDBC URLs found." + RESET);
-            return;
-        }
-
-        Console console = System.console();
-        if (console == null) {
-            System.out.println(RED + "No console available." + RESET);
-            return;
-        }
-
-        int entryNumber = 1;
-        int totalEntries = lines.size();
-
-        // ---------------------------------------------------------
-        // ONE LOOP — ASK CREDENTIALS → CONNECT → REPORT
-        // ---------------------------------------------------------
-        for (String url : lines) {
-
-            String service = extractServiceName(url);
-            String port = extractPort(url);
-            String serviceName = extractServiceNameFull(url);
-
-            System.out.println(CYAN + "\n==================================================" + RESET);
-            System.out.println(CYAN + "Entry " + entryNumber + " of " + totalEntries + RESET);
-
-            // Ask credentials immediately
-            System.out.println(CYAN + "--- Credentials for " + service + " ---" + RESET);
-            String user = console.readLine("Enter username for " + service + ": ");
-            char[] passChars = console.readPassword("Enter password for " + service + ": ");
-            String pass = new String(passChars);
-
-            List<String> scanHosts = extractHosts(url);
-            String activeHost = null;
-            String activeIP = null;
-            long elapsedMs = 0;
-            long elapsedSec = 0;
-            boolean authFailed = false;
-
-            // Try each SCAN host individually with timeout
-            for (String testHost : scanHosts) {
-                System.out.println(YELLOW + "Attempting connection to: " + testHost + RESET);
-                
-                // Create individual connection string for this host only
-                String singleHostUrl = buildSingleHostUrl(testHost, port, serviceName);
-                
-                long start = System.currentTimeMillis();
-
-                try {
-                    // Set connection timeout to 5 seconds
-                    Properties props = new Properties();
-                    props.setProperty("user", user);
-                    props.setProperty("password", pass);
-                    props.setProperty("oracle.net.CONNECT_TIMEOUT", "5000");
-                    
-                    Connection conn = DriverManager.getConnection(singleHostUrl, props);
-
-                    elapsedMs = System.currentTimeMillis() - start;
-                    elapsedSec = elapsedMs / 1000;
-
-                    // Connection succeeded - this is the active host
-                    activeHost = testHost;
-                    activeIP = resolveIP(testHost);
-
-                    System.out.println(GREEN + "✓ Successfully connected via: " + BOLD + testHost + RESET);
-
-                    // Backend node
-                    String backendNode = "UNKNOWN_NODE";
-                    java.sql.Statement stmt = conn.createStatement();
-                    java.sql.ResultSet rs = stmt.executeQuery(
-                            "SELECT SYS_CONTEXT('USERENV','SERVER_HOST') FROM dual");
-
-                    if (rs.next()) backendNode = rs.getString(1);
-
-                    rs.close();
-                    stmt.close();
-
-                    // Backend node IP
-                    String backendIP = resolveIP(backendNode);
-
-                    System.out.println(GREEN + "RESULT: SUCCESS" + RESET);
-                    System.out.println(GREEN + "Connected successfully to " + BOLD + service + RESET);
-
-                    System.out.println(GREEN +
-                            "Active SCAN host and IP: " +
-                            BOLD + activeHost + RESET +
-                            " and " + BOLD + activeIP + RESET);
-
-                    System.out.println(GREEN +
-                            "Backend RAC node and IP: " +
-                            BOLD + backendNode + RESET +
-                            " and " + BOLD + backendIP + RESET);
-
-                    System.out.println(GREEN +
-                            "Time taken: " + BOLD + elapsedSec +
-                            " sec (" + elapsedMs + " ms)" + RESET);
-
-                    conn.close();
-                    // Connection succeeded, break out of the host loop
-                    break;
-
-                } catch (SQLException ex) {
-
-                    elapsedMs = System.currentTimeMillis() - start;
-                    elapsedSec = elapsedMs / 1000;
-
-                    System.out.println(RED + "✗ Connection failed for " + testHost + RESET);
-                    System.out.println(RED + "ErrorCode: " + ex.getErrorCode() + 
-                                     " | SQLState: " + ex.getSQLState() + RESET);
-                    System.out.println(RED + "Time taken: " + elapsedSec + " sec" + RESET);
-                    System.out.println(RED + "Message: " + ex.getMessage() + RESET);
-
-                    if (ex.getErrorCode() == 1017 || "28000".equals(ex.getSQLState())) {
-                        System.out.println(RED + BOLD +
-                                "Authentication failed. Stopping further attempts." +
-                                RESET);
-                        authFailed = true;
-                        break;
-                    }
-                    
-                    System.out.println(YELLOW + "Trying next SCAN host..." + RESET);
-                    // Continue to next host
-                } catch (Exception ex) {
-                    elapsedMs = System.currentTimeMillis() - start;
-                    System.out.println(RED + "✗ Error connecting to " + testHost + RESET);
-                    System.out.println(RED + "Message: " + ex.getMessage() + RESET);
-                    System.out.println(RED + "Time taken: " + (elapsedMs / 1000) + " sec" + RESET);
-                    System.out.println(YELLOW + "Trying next SCAN host..." + RESET);
-                }
-            }
-
-            // If no active host was found
-            if (activeHost == null) {
-                System.out.println(RED + "RESULT: FAILURE" + RESET);
-                if (authFailed) {
-                    System.out.println(RED + "Authentication failed for user: " + user + RESET);
-                } else {
-                    System.out.println(RED + "Could not connect to any SCAN host:" + RESET);
-                    for (String host : scanHosts) {
-                        System.out.println(RED + "  - " + host + RESET);
-                    }
-                }
-            }
-
-            entryNumber++;
-        }
-
-        System.out.println(CYAN + "\n=== Testing Complete ===" + RESET);
-    }
-}
