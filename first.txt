@@ -1,79 +1,48 @@
-e3016834@pdc8rctoihap11 [/home/e3016834]
-$ cat runDbTest.sh
-#!/bin/bash
 
-GREEN="\033[1;32m"
-NC="\033[0m"
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
 
-echo -e "${GREEN}"
-echo "==============================================================="
-echo "   Oracle DB Test Runner"
-echo "   - No argument  → use ./tns.txt"
-echo "   - Absolute path → use as-is"
-echo "   - Filename      → use file from current directory"
-echo "==============================================================="
-echo -e "${NC}"
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(ADDRESS=(PROTOCOL=TCP)(HOST=p8x5vm02-1-scan.prod.local)(PORT=1721)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
 
-CALLER_DIR="$(pwd)"
+jdbc:oracle:thin:@(description=(address=(host=p1xlvdb4-1-scan)(protocol=tcp)(port=1621))(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(FAILOVER=on)(connect_data=(service_name=MB_RDY_SVC)))
 
-###############################################
-# Determine which .txt file to use
-###############################################
+jdbc:oracle:thin:@(description=(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(address=(host=p1xlvdb4-1-scan)(protocol=tcp)(port=1621))(FAILOVER=on)(connect_data=(service_name=MB_RDY_SVC)))
 
-if [[ -n "$1" ]]; then
-    ARG="$1"
+Entry 1 of 4
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
+RESULT: SUCCESS
+Connected successfully to MB_RDY_SVC
+Connected using SCAN host and IP: p1xlvdb4-1-scan and 10.236.191.56
+Backend RAC node and IP: p1xlvdb4d-adm and DNS_LOOKUP_FAILED
+Time taken: 2 sec (2758 ms)
 
-    # Case 1: Absolute path
-    if [[ "$ARG" == /* ]]; then
-        if [[ -f "$ARG" ]]; then
-            TXT_PATH="$ARG"
-            echo -e "${GREEN}Using absolute path file: $TXT_PATH${NC}"
-        else
-            echo "ERROR: File not found: $ARG"
-            exit 1
-        fi
+==================================================
+Entry 2 of 4
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
+RESULT: FAILURE
+Connection failed for descriptor:
+jdbc:oracle:thin:@(DESCRIPTION_LIST=(LOAD_BALANCE=off)(FAILOVER=on)(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=on)(ADDRESS=(PROTOCOL=TCP)(HOST=p1xlvdb4-1-scan)(PORT=1621)))(ADDRESS=(PROTOCOL=TCP)(HOST=p8x5vm02-1-scan.prod.local)(PORT=1721)))(CONNECT_DATA=(SERVICE_NAME=MB_RDY_SVC))))
+Time taken: 0 sec (40 ms)
+SQLState : 08006
+ErrorCode: 17002
+Message  : IO Error: SO Exception was generated (CONNECTION_ID=u2IAgcr9SWyi7GO+dq7o5w==)
+==================================================
+Entry 3 of 4
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
+RESULT: SUCCESS
+Connected successfully to MB_RDY_SVC
+Connected using SCAN host and IP: p1xlvdb4-1-scan and 10.236.191.57
+Backend RAC node and IP: p1xlvdb4d-adm and DNS_LOOKUP_FAILED
+Time taken: 2 sec (2358 ms)
+==================================================
+Entry 4 of 4
+--- Credentials for MB_RDY_SVC ---
+Enter username for MB_RDY_SVC: e3016834
+Enter password for MB_RDY_SVC:
 
-    # Case 2: Filename in current directory
-    else
-        if [[ -f "$CALLER_DIR/$ARG" ]]; then
-            TXT_PATH="$CALLER_DIR/$ARG"
-            echo -e "${GREEN}Using local file: $TXT_PATH${NC}"
-        else
-            echo "ERROR: File not found in current directory: $ARG"
-            exit 1
-        fi
-    fi
-
-else
-    # Case 3: No argument → default to tns.txt
-    if [[ -f "$CALLER_DIR/tns.txt" ]]; then
-        TXT_PATH="$CALLER_DIR/tns.txt"
-        echo -e "${GREEN}Using default tns.txt: $TXT_PATH${NC}"
-    else
-        echo "ERROR: No argument provided and no tns.txt found in current directory"
-        exit 1
-    fi
-fi
-
-###############################################
-# Move into DBTest directory
-###############################################
-cd /home/e3016834/DBTest || {
-    echo "ERROR: Failed to enter DBTest directory"
-    exit 1
-}
-
-###############################################
-# Execute the Java program
-###############################################
-/opt/WebSphere/9/AppServerBase1/java/8.0/bin/java -cp .:ojdbc8.jar OracleConnectionTest "$TXT_PATH"
-
-
-e3016834@pdc8rctoihap11 [/home/e3016834]
-$ cd  DBTest/
-
-e3016834@pdc8rctoihap11 [/home/e3016834/DBTest]
-$ ls
- ojdbc8.jar                       OracleConnectionTest.class  'OracleTokenReport$Credentials.class'   OracleTokenReport.java
- OracleConnectionTest_bkup.java   OracleConnectionTest.java    OracleTokenReport.class
 
