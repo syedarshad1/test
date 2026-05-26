@@ -1,12 +1,79 @@
+e3016834@pdc8rctoihap11 [/home/e3016834]
+$ cat runDbTest.sh
+#!/bin/bash
+
+GREEN="\033[1;32m"
+NC="\033[0m"
+
+echo -e "${GREEN}"
+echo "==============================================================="
+echo "   Oracle DB Test Runner"
+echo "   - No argument  → use ./tns.txt"
+echo "   - Absolute path → use as-is"
+echo "   - Filename      → use file from current directory"
+echo "==============================================================="
+echo -e "${NC}"
+
+CALLER_DIR="$(pwd)"
+
+###############################################
+# Determine which .txt file to use
+###############################################
+
+if [[ -n "$1" ]]; then
+    ARG="$1"
+
+    # Case 1: Absolute path
+    if [[ "$ARG" == /* ]]; then
+        if [[ -f "$ARG" ]]; then
+            TXT_PATH="$ARG"
+            echo -e "${GREEN}Using absolute path file: $TXT_PATH${NC}"
+        else
+            echo "ERROR: File not found: $ARG"
+            exit 1
+        fi
+
+    # Case 2: Filename in current directory
+    else
+        if [[ -f "$CALLER_DIR/$ARG" ]]; then
+            TXT_PATH="$CALLER_DIR/$ARG"
+            echo -e "${GREEN}Using local file: $TXT_PATH${NC}"
+        else
+            echo "ERROR: File not found in current directory: $ARG"
+            exit 1
+        fi
+    fi
+
+else
+    # Case 3: No argument → default to tns.txt
+    if [[ -f "$CALLER_DIR/tns.txt" ]]; then
+        TXT_PATH="$CALLER_DIR/tns.txt"
+        echo -e "${GREEN}Using default tns.txt: $TXT_PATH${NC}"
+    else
+        echo "ERROR: No argument provided and no tns.txt found in current directory"
+        exit 1
+    fi
+fi
+
+###############################################
+# Move into DBTest directory
+###############################################
+cd /home/e3016834/DBTest || {
+    echo "ERROR: Failed to enter DBTest directory"
+    exit 1
+}
+
 ###############################################
 # Execute the Java program
 ###############################################
 /opt/WebSphere/9/AppServerBase1/java/8.0/bin/java -cp .:ojdbc8.jar OracleConnectionTest "$TXT_PATH"
 
 
-path is correct?
+e3016834@pdc8rctoihap11 [/home/e3016834]
+$ cd  DBTest/
 
 e3016834@pdc8rctoihap11 [/home/e3016834/DBTest]
 $ ls
  ojdbc8.jar                       OracleConnectionTest.class  'OracleTokenReport$Credentials.class'   OracleTokenReport.java
  OracleConnectionTest_bkup.java   OracleConnectionTest.java    OracleTokenReport.class
+
