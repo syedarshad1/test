@@ -1,38 +1,3 @@
-Entry 1 of 2
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to II_RDY_SVC
-Connected using SCAN host and IP: p1xlvdb4-1-scan.fnfis.com and 10.236.191.57
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Time taken: 2 sec (2964 ms)
-
-==================================================
-Entry 2 of 2
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to II_RDY_SVC
-Connected using SCAN host and IP: p8x5vm02-1-scan.prod.local and 147.249.69.83
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Time taken: 0 sec (94 ms)
-
-=== Testing Complete ===
-
-jdbc:oracle:thin:@(description=(address=(host=p1xlvdb4-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p1xlvdb3-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(FAILOVER=on)(connect_data=(service_name=II_RDY_SVC)))
-
-jdbc:oracle:thin:@(description=(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(address=(host=p1xlvdb4-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p1xlvdb3-1-scan.fnfis.com)(protocol=tcp)(port=1621))(FAILOVER=on)(connect_data=(service_name=II_RDY_SVC)))
-
-For Entry 2 of 2: Even through you are connecting to "Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED" and you are showing as "Connected using SCAN host and IP: p8x5vm02-1-scan.prod.local and 147.249.69.83" , it should be like below
-
-Connected using SCAN host and IP: p1xlvdb4-1-scan.fnfis.com and 10.236.191.57
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-
-
-Code:
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -72,6 +37,37 @@ public class OracleConnectionTest {
             return addr.getHostAddress();
         } catch (Exception e) {
             return "DNS_LOOKUP_FAILED";
+        }
+    }
+
+    private static String getActualConnectedHost(Connection conn, List<String> configuredHosts) {
+        try {
+            // Query the database for which host we're connected to
+            java.sql.Statement stmt = conn.createStatement();
+            java.sql.ResultSet rs = stmt.executeQuery(
+                    "SELECT host_name FROM v$instance");
+
+            String instanceHost = null;
+            if (rs.next()) {
+                instanceHost = rs.getString(1);
+            }
+            rs.close();
+            stmt.close();
+
+            // Match the instance host with configured hosts
+            if (instanceHost != null) {
+                for (String configHost : configuredHosts) {
+                    // Check if instance host matches (might be FQDN vs short name)
+                    if (configHost.toLowerCase().contains(instanceHost.toLowerCase()) ||
+                        instanceHost.toLowerCase().contains(configHost.toLowerCase())) {
+                        return configHost;
+                    }
+                }
+            }
+            
+            return instanceHost != null ? instanceHost : "UNKNOWN_HOST";
+        } catch (SQLException e) {
+            return "UNABLE_TO_QUERY";
         }
     }
 
@@ -135,6 +131,10 @@ public class OracleConnectionTest {
                 long elapsedMs = System.currentTimeMillis() - start;
                 long elapsedSec = elapsedMs / 1000;
 
+                // Get the ACTUAL connected host from the database
+                String usedScanHost = getActualConnectedHost(conn, scanHosts);
+                String usedScanIP = resolveIP(usedScanHost);
+
                 // Backend node
                 String backendNode = "UNKNOWN_NODE";
                 java.sql.Statement stmt = conn.createStatement();
@@ -145,19 +145,6 @@ public class OracleConnectionTest {
 
                 rs.close();
                 stmt.close();
-
-                // Detect SCAN host Oracle used
-                String usedScanHost = "UNKNOWN_SCAN_HOST";
-                String usedScanIP = "DNS_LOOKUP_FAILED";
-
-                for (String host : scanHosts) {
-                    String ip = resolveIP(host);
-                    if (!ip.equals("DNS_LOOKUP_FAILED")) {
-                        usedScanHost = host;
-                        usedScanIP = ip;
-                        break;
-                    }
-                }
 
                 // Backend node IP
                 String backendIP = resolveIP(backendNode);
@@ -206,4 +193,3 @@ public class OracleConnectionTest {
         System.out.println(CYAN + "\n=== Testing Complete ===" + RESET);
     }
 }
-
