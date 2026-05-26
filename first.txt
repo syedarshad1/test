@@ -7,6 +7,7 @@ import java.io.Console;
 import java.util.*;
 import java.util.regex.*;
 import java.net.*;
+import java.util.concurrent.*;
 
 public class OracleConnectionTest {
 
@@ -40,48 +41,20 @@ public class OracleConnectionTest {
         }
     }
 
-    private static String getConnectedHost(Connection conn) {
+    private static Connection tryConnect(String url, String user, String pass, int timeoutSeconds) throws Exception {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Connection> future = executor.submit(() -> {
+            try {
+                return DriverManager.getConnection(url, user, pass);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         try {
-            // Try multiple methods to get the connected host
-            
-            // Method 1: Try v$session
-            try {
-                java.sql.Statement stmt = conn.createStatement();
-                java.sql.ResultSet rs = stmt.executeQuery(
-                        "SELECT host FROM v$session WHERE autsid = (SELECT UNIQUE authid FROM v$session WHERE sid = (SELECT SYS_CONTEXT('USERENV','SID') FROM dual))");
-                
-                if (rs.next()) {
-                    String host = rs.getString(1);
-                    rs.close();
-                    stmt.close();
-                    return host;
-                }
-                rs.close();
-                stmt.close();
-            } catch (Exception e1) {
-                // Method 1 failed, try Method 2
-            }
-            
-            // Method 2: Get from connection properties
-            try {
-                java.sql.Statement stmt = conn.createStatement();
-                java.sql.ResultSet rs = stmt.executeQuery(
-                        "SELECT SYS_CONTEXT('USERENV','SERVER_HOST') FROM dual");
-                
-                String host = "UNKNOWN_HOST";
-                if (rs.next()) {
-                    host = rs.getString(1);
-                }
-                rs.close();
-                stmt.close();
-                return host;
-            } catch (Exception e2) {
-                // Method 2 failed too
-            }
-            
-            return "UNKNOWN_HOST";
-        } catch (Exception e) {
-            return "ERROR_GETTING_HOST";
+            return future.get(timeoutSeconds, TimeUnit.SECONDS);
+        } finally {
+            executor.shutdownNow();
         }
     }
 
@@ -143,21 +116,11 @@ public class OracleConnectionTest {
             Connection conn = null;
 
             try {
-                // Set connection properties with timeout
-                Properties props = new Properties();
-                props.setProperty("user", user);
-                props.setProperty("password", pass);
-                props.setProperty("oracle.net.CONNECT_TIMEOUT", "5000");
-                props.setProperty("oracle.net.READ_TIMEOUT", "5000");
-                
-                System.out.println(YELLOW + "Connecting..." + RESET);
-                conn = DriverManager.getConnection(url, props);
+                System.out.println(YELLOW + "Connecting (timeout: 10 seconds)..." + RESET);
+                conn = tryConnect(url, user, pass, 10);
 
                 long elapsedMs = System.currentTimeMillis() - start;
                 long elapsedSec = elapsedMs / 1000;
-
-                // Get the actual connected host
-                String connectedHost = getConnectedHost(conn);
 
                 // Get backend node name
                 String backendNode = "UNKNOWN_NODE";
@@ -171,20 +134,14 @@ public class OracleConnectionTest {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    backendNode = "ERROR: " + e.getMessage();
+                    backendNode = "ERROR_QUERYING";
                 }
 
-                // Resolve IPs
-                String connectedIP = resolveIP(connectedHost);
+                // Resolve IP
                 String backendIP = resolveIP(backendNode);
 
                 System.out.println(GREEN + "RESULT: SUCCESS" + RESET);
                 System.out.println(GREEN + "Connected successfully to service: " + BOLD + service + RESET);
-
-                System.out.println(GREEN +
-                        "Connected via SCAN host: " +
-                        BOLD + connectedHost + RESET +
-                        " (IP: " + BOLD + connectedIP + RESET + ")");
 
                 System.out.println(GREEN +
                         "Backend RAC node: " +
@@ -197,8 +154,19 @@ public class OracleConnectionTest {
 
                 conn.close();
 
-            } catch (SQLException ex) {
+            } catch (TimeoutException e) {
+                long elapsedMs = System.currentTimeMillis() - start;
+                System.out.println(RED + "RESULT: TIMEOUT" + RESET);
+                System.out.println(RED + "Connection timed out after " + (elapsedMs / 1000) + " seconds" + RESET);
+                System.out.println(RED + "Could not reach any of the configured SCAN hosts:" + RESET);
+                for (String host : configuredHosts) {
+                    System.out.println(RED + "  - " + host + RESET);
+                }
+                try {
+                    if (conn != null) conn.close();
+                } catch (Exception ex) {}
 
+            } catch (SQLException ex) {
                 long elapsedMs = System.currentTimeMillis() - start;
                 long elapsedSec = elapsedMs / 1000;
 
@@ -219,10 +187,11 @@ public class OracleConnectionTest {
                             RESET);
                     break;
                 }
+
             } catch (Exception ex) {
                 long elapsedMs = System.currentTimeMillis() - start;
                 System.out.println(RED + "RESULT: ERROR" + RESET);
-                System.out.println(RED + "Unexpected error: " + ex.getMessage() + RESET);
+                System.out.println(RED + "Error: " + ex.getClass().getSimpleName() + " - " + ex.getMessage() + RESET);
                 System.out.println(RED + "Time: " + (elapsedMs / 1000) + " sec" + RESET);
                 
                 try {
