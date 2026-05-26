@@ -31,6 +31,22 @@ public class OracleConnectionTest {
         return hosts;
     }
 
+    private static String extractPort(String jdbcUrl, String host) {
+        // Find the port for the specific host
+        Pattern p = Pattern.compile("host=" + Pattern.quote(host) + "\\)\\(protocol=tcp\\)\\(port=([0-9]+)\\)", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(jdbcUrl);
+        if (m.find()) {
+            return m.group(1);
+        }
+        // Fallback pattern
+        p = Pattern.compile("\\(port=([0-9]+)\\)", Pattern.CASE_INSENSITIVE);
+        m = p.matcher(jdbcUrl);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return "1521";
+    }
+
     private static String resolveIP(String host) {
         try {
             InetAddress addr = InetAddress.getByName(host);
@@ -40,9 +56,9 @@ public class OracleConnectionTest {
         }
     }
 
-    private static String getActualConnectedHost(Connection conn, List<String> configuredHosts) {
+    private static String getActualConnectedHost(Connection conn, List<String> configuredHosts, String jdbcUrl) {
         try {
-            // Query using SYS_CONTEXT - no admin privileges needed
+            // Query using SYS_CONTEXT to get server host
             java.sql.Statement stmt = conn.createStatement();
             java.sql.ResultSet rs = stmt.executeQuery(
                     "SELECT sys_context('USERENV','SERVER_HOST') AS server_host FROM dual");
@@ -54,26 +70,42 @@ public class OracleConnectionTest {
             rs.close();
             stmt.close();
 
-            // Try to match the server host with configured hosts
+            // Match the server host with configured hosts in order
             if (serverHost != null && !serverHost.trim().isEmpty()) {
+                // Try exact match first
+                for (String configHost : configuredHosts) {
+                    if (configHost.toLowerCase().equals(serverHost.toLowerCase())) {
+                        return configHost;
+                    }
+                }
+                // Try partial match
                 for (String configHost : configuredHosts) {
                     if (configHost.toLowerCase().contains(serverHost.toLowerCase()) ||
                         serverHost.toLowerCase().contains(configHost.toLowerCase())) {
                         return configHost;
                     }
                 }
-                // If no exact match, return what we got from the query
+                // Return what we got from the query
                 return serverHost;
+            }
+            
+            // Fallback: return first host from JDBC string
+            if (!configuredHosts.isEmpty()) {
+                return configuredHosts.get(0);
             }
             
             return "UNKNOWN_HOST";
         } catch (SQLException e) {
-            // Fallback: match based on which hosts are reachable
+            // Fallback: return first resolvable host
             for (String host : configuredHosts) {
                 String ip = resolveIP(host);
                 if (!ip.equals("DNS_LOOKUP_FAILED")) {
                     return host;
                 }
+            }
+            // Last resort: return first configured host
+            if (!configuredHosts.isEmpty()) {
+                return configuredHosts.get(0);
             }
             return "UNABLE_TO_QUERY";
         }
@@ -124,13 +156,15 @@ public class OracleConnectionTest {
             System.out.println(CYAN + "\n==================================================" + RESET);
             System.out.println(CYAN + "Entry " + entryNumber + " of " + totalEntries + RESET);
 
+            // Extract hosts from JDBC URL
+            List<String> scanHosts = extractHosts(url);
+            System.out.println(CYAN + "Configured hosts in order: " + scanHosts + RESET);
+
             // Ask credentials immediately
             System.out.println(CYAN + "--- Credentials for " + service + " ---" + RESET);
             String user = console.readLine("Enter username for " + service + ": ");
             char[] passChars = console.readPassword("Enter password for " + service + ": ");
             String pass = new String(passChars);
-
-            List<String> scanHosts = extractHosts(url);
 
             long start = System.currentTimeMillis();
 
@@ -139,25 +173,18 @@ public class OracleConnectionTest {
                 long elapsedMs = System.currentTimeMillis() - start;
                 long elapsedSec = elapsedMs / 1000;
 
-                // Get the ACTUAL connected host using SYS_CONTEXT
-                String usedScanHost = getActualConnectedHost(conn, scanHosts);
+                // Get the ACTUAL connected host
+                String usedScanHost = getActualConnectedHost(conn, scanHosts, url);
                 String usedScanIP = resolveIP(usedScanHost);
 
-                // Get instance name, service name and server host using SYS_CONTEXT
-                String instanceName = "UNKNOWN_INSTANCE";
-                String serviceName = "UNKNOWN_SERVICE";
+                // Get server host using SYS_CONTEXT
                 String serverHost = "UNKNOWN_HOST";
                 
                 java.sql.Statement stmt = conn.createStatement();
                 java.sql.ResultSet rs = stmt.executeQuery(
-                        "SELECT sys_context('USERENV','SERVICE_NAME') AS service_name, " +
-                        "       sys_context('USERENV','INSTANCE_NAME') AS instance_name, " +
-                        "       sys_context('USERENV','SERVER_HOST') AS server_host " +
-                        "FROM dual");
+                        "SELECT sys_context('USERENV','SERVER_HOST') AS server_host FROM dual");
 
                 if (rs.next()) {
-                    serviceName = rs.getString("service_name");
-                    instanceName = rs.getString("instance_name");
                     serverHost = rs.getString("server_host");
                 }
 
@@ -179,9 +206,6 @@ public class OracleConnectionTest {
                         "Backend RAC node and IP: " +
                         BOLD + serverHost + RESET +
                         " and " + BOLD + serverHostIP + RESET);
-
-                System.out.println(GREEN +
-                        "Instance Name: " + BOLD + instanceName + RESET);
 
                 System.out.println(GREEN +
                         "Time taken: " + BOLD + elapsedSec +
