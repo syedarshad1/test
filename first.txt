@@ -1,29 +1,95 @@
-Using default tns.txt: /home/e3016834/tns.txt
-=== Oracle JDBC Diagnostic Tool ===
-Using file: /home/e3016834/tns.txt
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.Console;
+import java.util.*;
+import java.util.regex.*;
 
-==================================================
-Entry 1 of 2
-Configured SCAN hosts: [p8x5vm02-1-scan.prod.local, p1xlvdb4-1-scan]
---- Credentials for MB_RDY_SVC ---
-Enter username for MB_RDY_SVC: e3016834
-Enter password for MB_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to service: MB_RDY_SVC
-Connected via SCAN host: UNABLE_TO_QUERY (IP: DNS_LOOKUP_FAILED)
-Backend RAC node: p1xlvdb4d-adm (IP: DNS_LOOKUP_FAILED)
-Connection time: 2 sec (2268 ms)
+public class OracleConnectionTest {
 
-==================================================
-Entry 2 of 2
-Configured SCAN hosts: [p1xlvdb4-1-scan, p8x5vm02-1-scan.prod.local]
---- Credentials for MB_RDY_SVC ---
-Enter username for MB_RDY_SVC: e3016834
-Enter password for MB_RDY_SVC:
-RESULT: FAILURE
-Could not connect to service: MB_RDY_SVC
-ErrorCode: 17002 | SQLState: 08006
-Message: IO Error: SO Exception was generated (CONNECTION_ID=vVBSejiRRYG0DkPyMvpk6A==)
-Connection time: 0 sec (8 ms)
+    private static final String GREEN  = "\u001B[32m";
+    private static final String RED    = "\u001B[31m";
+    private static final String CYAN   = "\u001B[36m";
+    private static final String RESET  = "\u001B[0m";
+    private static final String BOLD   = "\u001B[1m";
 
-=== Testing Complete ===
+    private static String extractServiceName(String jdbcUrl) {
+        Pattern p = Pattern.compile("service_name=([^\\)]+)", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(jdbcUrl);
+        return m.find() ? m.group(1).trim() : "UNKNOWN";
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        System.out.println(CYAN + "=== Oracle Connection Test ===" + RESET);
+
+        String tnsPath = (args.length > 0) ? args[0] : "tns.txt";
+        List<String> lines = Files.readAllLines(Paths.get(tnsPath));
+        lines.removeIf(line -> line.trim().isEmpty() || line.trim().startsWith("#"));
+
+        if (lines.isEmpty()) {
+            System.out.println(RED + "No URLs found in " + tnsPath + RESET);
+            return;
+        }
+
+        Console console = System.console();
+        String user = console.readLine("Enter username: ");
+        char[] passChars = console.readPassword("Enter password: ");
+        String pass = new String(passChars);
+
+        int entry = 1;
+        for (String url : lines) {
+            String service = extractServiceName(url);
+            
+            System.out.println(CYAN + "\n--- Entry " + entry + ": " + service + " ---" + RESET);
+            
+            long start = System.currentTimeMillis();
+            Connection conn = null;
+
+            try {
+                conn = DriverManager.getConnection(url, user, pass);
+                long elapsed = System.currentTimeMillis() - start;
+
+                // Get the instance name (database node)
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT instance_name FROM v$instance");
+                String instance = "UNKNOWN";
+                if (rs.next()) instance = rs.getString(1);
+                rs.close();
+                stmt.close();
+
+                // Get the host name (database server)
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT host_name FROM v$instance");
+                String host = "UNKNOWN";
+                if (rs.next()) host = rs.getString(1);
+                rs.close();
+                stmt.close();
+
+                System.out.println(GREEN + "✓ SUCCESS" + RESET);
+                System.out.println(GREEN + "  Instance: " + BOLD + instance + RESET);
+                System.out.println(GREEN + "  Host:     " + BOLD + host + RESET);
+                System.out.println(GREEN + "  Time:     " + elapsed + " ms" + RESET);
+
+                conn.close();
+
+            } catch (SQLException e) {
+                long elapsed = System.currentTimeMillis() - start;
+                System.out.println(RED + "✗ FAILED" + RESET);
+                System.out.println(RED + "  Error: " + e.getMessage() + RESET);
+                System.out.println(RED + "  Code: " + e.getErrorCode() + RESET);
+                System.out.println(RED + "  Time: " + elapsed + " ms" + RESET);
+                
+                try { if (conn != null) conn.close(); } catch (Exception ex) {}
+            }
+
+            entry++;
+        }
+
+        System.out.println(CYAN + "\n=== Done ===" + RESET);
+    }
+}
