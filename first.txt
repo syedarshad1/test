@@ -1,195 +1,36 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.Console;
-import java.util.*;
-import java.util.regex.*;
-import java.net.*;
+$ ./runDbTest.sh
 
-public class OracleConnectionTest {
+===============================================================
+   Oracle DB Test Runner
+   - No argument  → use ./tns.txt
+   - Absolute path → use as-is
+   - Filename      → use file from current directory
+===============================================================
 
-    private static final String GREEN  = "\u001B[32m";
-    private static final String RED    = "\u001B[31m";
-    private static final String YELLOW = "\u001B[33m";
-    private static final String CYAN   = "\u001B[36m";
-    private static final String RESET  = "\u001B[0m";
-    private static final String BOLD   = "\u001B[1m";
+Using default tns.txt: /home/e3016834/tns.txt
+=== Oracle JDBC Diagnostic Tool ===
+Using file: /home/e3016834/tns.txt
 
-    private static String extractServiceName(String jdbcUrl) {
-        Pattern p = Pattern.compile("service_name=([^\\)]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        return m.find() ? m.group(1).trim() : "UNKNOWN_SERVICE";
-    }
+==================================================
+Entry 1 of 2
+--- Credentials for II_RDY_SVC ---
+Enter username for II_RDY_SVC: e3016834
+Enter password for II_RDY_SVC:
+RESULT: SUCCESS
+Connected successfully to II_RDY_SVC
+Connected using SCAN host and IP: UNABLE_TO_QUERY and DNS_LOOKUP_FAILED
+Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
+Time taken: 1 sec (1504 ms)
 
-    private static List<String> extractHosts(String jdbcUrl) {
-        List<String> hosts = new ArrayList<>();
-        Pattern p = Pattern.compile("host=([^\\)]+)", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(jdbcUrl);
-        while (m.find()) hosts.add(m.group(1).trim());
-        return hosts;
-    }
+==================================================
+Entry 2 of 2
+--- Credentials for II_RDY_SVC ---
+Enter username for II_RDY_SVC: e3016834
+Enter password for II_RDY_SVC:
+RESULT: SUCCESS
+Connected successfully to II_RDY_SVC
+Connected using SCAN host and IP: UNABLE_TO_QUERY and DNS_LOOKUP_FAILED
+Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
+Time taken: 0 sec (113 ms)
 
-    private static String resolveIP(String host) {
-        try {
-            InetAddress addr = InetAddress.getByName(host);
-            return addr.getHostAddress();
-        } catch (Exception e) {
-            return "DNS_LOOKUP_FAILED";
-        }
-    }
-
-    private static String getActualConnectedHost(Connection conn, List<String> configuredHosts) {
-        try {
-            // Query the database for which host we're connected to
-            java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet rs = stmt.executeQuery(
-                    "SELECT host_name FROM v$instance");
-
-            String instanceHost = null;
-            if (rs.next()) {
-                instanceHost = rs.getString(1);
-            }
-            rs.close();
-            stmt.close();
-
-            // Match the instance host with configured hosts
-            if (instanceHost != null) {
-                for (String configHost : configuredHosts) {
-                    // Check if instance host matches (might be FQDN vs short name)
-                    if (configHost.toLowerCase().contains(instanceHost.toLowerCase()) ||
-                        instanceHost.toLowerCase().contains(configHost.toLowerCase())) {
-                        return configHost;
-                    }
-                }
-            }
-            
-            return instanceHost != null ? instanceHost : "UNKNOWN_HOST";
-        } catch (SQLException e) {
-            return "UNABLE_TO_QUERY";
-        }
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(CYAN + "=== Oracle JDBC Diagnostic Tool ===" + RESET);
-
-        String tnsPath = (args.length > 0)
-                ? args[0]
-                : Paths.get("tns.txt").toAbsolutePath().toString();
-
-        System.out.println(CYAN + "Using file: " + tnsPath + RESET);
-
-        List<String> lines;
-
-        try {
-            lines = Files.readAllLines(Paths.get(tnsPath));
-        } catch (Exception e) {
-            System.out.println(RED + "FAILED: Unable to read " + tnsPath + RESET);
-            return;
-        }
-
-        lines.removeIf(line -> line.trim().isEmpty() || line.trim().startsWith("#"));
-
-        if (lines.isEmpty()) {
-            System.out.println(RED + "No JDBC URLs found." + RESET);
-            return;
-        }
-
-        Console console = System.console();
-        if (console == null) {
-            System.out.println(RED + "No console available." + RESET);
-            return;
-        }
-
-        int entryNumber = 1;
-        int totalEntries = lines.size();
-
-        // ---------------------------------------------------------
-        // ONE LOOP — ASK CREDENTIALS → CONNECT → REPORT
-        // ---------------------------------------------------------
-        for (String url : lines) {
-
-            String service = extractServiceName(url);
-
-            System.out.println(CYAN + "\n==================================================" + RESET);
-            System.out.println(CYAN + "Entry " + entryNumber + " of " + totalEntries + RESET);
-
-            // Ask credentials immediately
-            System.out.println(CYAN + "--- Credentials for " + service + " ---" + RESET);
-            String user = console.readLine("Enter username for " + service + ": ");
-            char[] passChars = console.readPassword("Enter password for " + service + ": ");
-            String pass = new String(passChars);
-
-            List<String> scanHosts = extractHosts(url);
-
-            long start = System.currentTimeMillis();
-
-            try (Connection conn = DriverManager.getConnection(url, user, pass)) {
-
-                long elapsedMs = System.currentTimeMillis() - start;
-                long elapsedSec = elapsedMs / 1000;
-
-                // Get the ACTUAL connected host from the database
-                String usedScanHost = getActualConnectedHost(conn, scanHosts);
-                String usedScanIP = resolveIP(usedScanHost);
-
-                // Backend node
-                String backendNode = "UNKNOWN_NODE";
-                java.sql.Statement stmt = conn.createStatement();
-                java.sql.ResultSet rs = stmt.executeQuery(
-                        "SELECT SYS_CONTEXT('USERENV','SERVER_HOST') FROM dual");
-
-                if (rs.next()) backendNode = rs.getString(1);
-
-                rs.close();
-                stmt.close();
-
-                // Backend node IP
-                String backendIP = resolveIP(backendNode);
-
-                System.out.println(GREEN + "RESULT: SUCCESS" + RESET);
-                System.out.println(GREEN + "Connected successfully to " + BOLD + service + RESET);
-
-                System.out.println(GREEN +
-                        "Connected using SCAN host and IP: " +
-                        BOLD + usedScanHost + RESET +
-                        " and " + BOLD + usedScanIP + RESET);
-
-                System.out.println(GREEN +
-                        "Backend RAC node and IP: " +
-                        BOLD + backendNode + RESET +
-                        " and " + BOLD + backendIP + RESET);
-
-                System.out.println(GREEN +
-                        "Time taken: " + BOLD + elapsedSec +
-                        " sec (" + elapsedMs + " ms)" + RESET);
-
-            } catch (SQLException ex) {
-
-                long elapsedMs = System.currentTimeMillis() - start;
-                long elapsedSec = elapsedMs / 1000;
-
-                System.out.println(RED + "RESULT: FAILURE" + RESET);
-                System.out.println(RED + "Connection failed for descriptor:" + RESET);
-                System.out.println(url);
-                System.out.println(RED + "Time taken: " + elapsedSec + " sec (" + elapsedMs + " ms)" + RESET);
-                System.out.println(RED + "SQLState : " + ex.getSQLState() + RESET);
-                System.out.println(RED + "ErrorCode: " + ex.getErrorCode() + RESET);
-                System.out.println(RED + "Message  : " + ex.getMessage() + RESET);
-
-                if (ex.getErrorCode() == 1017 || "28000".equals(ex.getSQLState())) {
-                    System.out.println(RED + BOLD +
-                            "Authentication failed. Stopping further attempts." +
-                            RESET);
-                    break;
-                }
-            }
-
-            entryNumber++;
-        }
-
-        System.out.println(CYAN + "\n=== Testing Complete ===" + RESET);
-    }
-}
+=== Testing Complete ===
