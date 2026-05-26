@@ -1,22 +1,3 @@
-Entry 1 of 2
-Configured hosts in order: [p1xlvdb4-1-scan.fnfis.com, p1xlvdb3-1-scan.fnfis.com, p8x5vm02-1-scan.prod.local]
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to service: II_RDY_SVC
-Connected using SCAN host and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Backend RAC node and IP: p1xlvdb4a-adm and DNS_LOOKUP_FAILED
-Time taken: 1 sec (1467 ms)
+jdbc:oracle:thin:@(description=(address=(host=p1xlvdb4-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p1xlvdb3-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(FAILOVER=on)(connect_data=(service_name=II_RDY_SVC)))
 
-==================================================
-Entry 2 of 2
-Configured hosts in order: [p8x5vm02-1-scan.prod.local, p1xlvdb4-1-scan.fnfis.com, p1xlvdb3-1-scan.fnfis.com]
---- Credentials for II_RDY_SVC ---
-Enter username for II_RDY_SVC: e3016834
-Enter password for II_RDY_SVC:
-RESULT: SUCCESS
-Connected successfully to service: II_RDY_SVC
-Connected using SCAN host and IP: p1xlvdb4b-adm and DNS_LOOKUP_FAILED
-Backend RAC node and IP: p1xlvdb4b-adm and DNS_LOOKUP_FAILED
-Time taken: 0 sec (94 ms)
+jdbc:oracle:thin:@(description=(address=(host=p8x5vm02-1-scan.prod.local)(protocol=tcp)(port=1721))(address=(host=p1xlvdb4-1-scan.fnfis.com)(protocol=tcp)(port=1621))(address=(host=p1xlvdb3-1-scan.fnfis.com)(protocol=tcp)(port=1621))(FAILOVER=on)(connect_data=(service_name=II_RDY_SVC)))
