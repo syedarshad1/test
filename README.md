@@ -1,4 +1,1 @@
-Correct the sentence or add more
-
-Hope you are doing well. My H1B and my spouse H4 extension is due and expiring on Oct 19th, 2026. Can you please me 
-know when the renewal process will start, I have just 4 ½ month left on my visa.
+I hope you are doing well. My H1B visa and my spouse's H4 extension are both expiring on October 19th, 2026. I have approximately 4.5 months remaining on my current visa status.
