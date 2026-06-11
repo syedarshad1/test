@@ -1,16 +1,1 @@
-<OAuthConfig>  
-   <backsideTransportClass>com.fisglobal.xpressng.datacenter.gatewayesbsupport.mediation.esb.adapters.backside.HttpRestPassthruAdapter</backsideTransportClass>  
-   <HttpConnectorEndpointKey>TIAA_transfer_token_gen_stg</HttpConnectorEndpointKey>  
-   <InjectHeader key="Content-Type">application/x-www-form-urlencoded</InjectHeader>  
-   <InjectQueryParam key="client_id">FIS-mmtransfer-STG</InjectQueryParam>  
-   <InjectQueryParam key="client_secret">mE9tjATbx7DjibvpHRVbvqZzkThx4S+HkmLTbRIcrVw=</InjectQueryParam>  
-   <InjectQueryParam key="grant_type">client_credentials</InjectQueryParam>  
-</OAuthConfig>
-
-
-							<tokenType>OAUTH2</tokenType>
-							<configDataKey>TIAA-Transfer-OAuth-Generate-Token-stg</configDataKey>
-							<tokenField>access_token</tokenField>
-							<aesKey>NG_1</aesKey>
-							<expiryField>expires_in</expiryField>
-							<tknExpBuffer>5000</tknExpBuffer>
+NG_1=!z$C&F)J@NcRfUjXn2r5u8x/A?D*G-Kaaa
