@@ -1,8 +1,10 @@
-1=abcdefghabcdefgh
-2=METAVANTEAESTEST
-3=HMLvhcV4x0w0eXkE
-4=abcdeabcdeabcdea
-NG_1=!z$C&F)J@NcRfUjXn2r5u8x/A?D*G-Kaaa
-5=PBEWITHSHA256AND256BITAES-CBC-BC
-6=yCUoeaYSMaxYw5XR
-7=urYtnb81razxener
+Match final all
+        # Follow system-wide Crypto Policy, if defined:
+        Include /etc/crypto-policies/back-ends/openssh.config
+
+        GSSAPIAuthentication yes
+
+# If this option is set to yes then remote X11 clients will have full access
+# to the original X11 display. As virtually no X11 client supports the untrusted
+# mode correctly we set this to yes.
+        ForwardX11Trusted yes
